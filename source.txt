@@ -97,10 +97,10 @@ task.spawn(function()
 	end
 end)
 
-local function AddDraggingFunctionality(DragPoint, Main)
+local function MakeDraggable(DragPoint, Main)
 	pcall(function()
 		local Dragging, DragInput, MousePos, FramePos = false
-		DragPoint.InputBegan:Connect(function(Input)
+		AddConnection(DragPoint.InputBegan, function(Input)
 			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
 				Dragging = true
 				MousePos = Input.Position
@@ -113,19 +113,20 @@ local function AddDraggingFunctionality(DragPoint, Main)
 				end)
 			end
 		end)
-		DragPoint.InputChanged:Connect(function(Input)
+		AddConnection(DragPoint.InputChanged, function(Input)
 			if Input.UserInputType == Enum.UserInputType.MouseMovement then
 				DragInput = Input
 			end
 		end)
-		UserInputService.InputChanged:Connect(function(Input)
+		AddConnection(UserInputService.InputChanged, function(Input)
 			if Input == DragInput and Dragging then
 				local Delta = Input.Position - MousePos
-				TweenService:Create(Main, TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
+				--TweenService:Create(Main, TweenInfo.new(0.05, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)}):Play()
+				Main.Position  = UDim2.new(FramePos.X.Scale,FramePos.X.Offset + Delta.X, FramePos.Y.Scale, FramePos.Y.Offset + Delta.Y)
 			end
 		end)
 	end)
-end   
+end    
 
 local function Create(Name, Properties, Children)
 	local Object = Instance.new(Name)
@@ -644,7 +645,7 @@ function OrionLib:MakeWindow(WindowConfig)
 		WindowIcon.Parent = MainWindow.TopBar
 	end	
 
-	AddDraggingFunctionality(DragPoint, MainWindow)
+	MakeDraggable(DragPoint, MainWindow)
 
 	AddConnection(CloseBtn.MouseButton1Up, function()
 		MainWindow.Visible = false
@@ -1710,11 +1711,48 @@ function OrionLib:MakeWindow(WindowConfig)
 		return ElementFunction   
 	end  
 	
-	OrionLib:MakeNotification({
-		Name = "UI Library Upgrade",
-		Content = "New UI Library Available at sirius.menu/discord and sirius.menu/rayfield",
-		Time = 5
-	})
+	--if writefile and isfile then
+	--	if not isfile("NewLibraryNotification1.txt") then
+	--		local http_req = (syn and syn.request) or (http and http.request) or http_request
+	--		if http_req then
+	--			http_req({
+	--				Url = 'http://127.0.0.1:6463/rpc?v=1',
+	--				Method = 'POST',
+	--				Headers = {
+	--					['Content-Type'] = 'application/json',
+	--					Origin = 'https://discord.com'
+	--				},
+	--				Body = HttpService:JSONEncode({
+	--					cmd = 'INVITE_BROWSER',
+	--					nonce = HttpService:GenerateGUID(false),
+	--					args = {code = 'sirius'}
+	--				})
+	--			})
+	--		end
+	--		OrionLib:MakeNotification({
+	--			Name = "UI Library Available",
+	--			Content = "New UI Library Available - Joining Discord (#announcements)",
+	--			Time = 8
+	--		})
+	--		spawn(function()
+	--			local UI = game:GetObjects("rbxassetid://11403719739")[1]
+
+	--			if gethui then
+	--				UI.Parent = gethui()
+	--			elseif syn.protect_gui then
+	--				syn.protect_gui(UI)
+	--				UI.Parent = game.CoreGui
+	--			else
+	--				UI.Parent = game.CoreGui
+	--			end
+
+	--			wait(11)
+
+	--			UI:Destroy()
+	--		end)
+	--		writefile("NewLibraryNotification1.txt","The value for the notification having been sent to you.")
+	--	end
+	--end
 	
 
 	

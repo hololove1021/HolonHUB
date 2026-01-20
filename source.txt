@@ -2002,4 +2002,6 @@ function OrionLib:Destroy()
 	Orion:Destroy()
 end
 
+OrionLib.SetTheme = SetTheme
+
 return OrionLib

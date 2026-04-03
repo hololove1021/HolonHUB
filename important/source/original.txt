@@ -1,158 +1,98 @@
--- [[ 独自のUIライブラリ作成用テンプレート ]]
--- Orion Libraryの関数構造やオプションを再現しています。
+local CustomUILib = {}
 
-local CustomLib = {
-    Themes = {
-        Default = {
-            Main = Color3.fromRGB(25, 25, 25),
-            Second = Color3.fromRGB(32, 32, 32),
-            Stroke = Color3.fromRGB(60, 60, 60),
-            Divider = Color3.fromRGB(60, 60, 60),
-            Text = Color3.fromRGB(240, 240, 240),
-            TextDark = Color3.fromRGB(150, 150, 150)
-        }
-    },
-    SelectedTheme = "Default"
-}
-
--- ===================================================
--- 1. 通知機能（OrionLib:MakeNotification）
--- ===================================================
-function CustomLib:MakeNotification(NotificationConfig)
-    NotificationConfig.Name = NotificationConfig.Name or "Notification"
-    NotificationConfig.Content = NotificationConfig.Content or "Content"
-    NotificationConfig.Image = NotificationConfig.Image or "rbxassetid://4384403532"
-    NotificationConfig.Time = NotificationConfig.Time or 5
-
-    print("通知を表示しました: " .. NotificationConfig.Name)
-    -- 【ここに実際の通知用のGui作成・アニメーション処理を書きます】
-end
-
--- ===================================================
--- 2. メインウィンドウの作成（OrionLib:MakeWindow）
--- ===================================================
-function CustomLib:MakeWindow(WindowConfig)
-    WindowConfig = WindowConfig or {}
-    WindowConfig.Name = WindowConfig.Name or "Orion Library"
-    WindowConfig.IntroEnabled = WindowConfig.IntroEnabled ~= nil and WindowConfig.IntroEnabled or true
-    WindowConfig.IntroText = WindowConfig.IntroText or "Orion Library"
-    WindowConfig.KeyToOpenWindow = WindowConfig.KeyToOpenWindow or "K"
-
-    local Window = {}
-    print("ウィンドウを作成しました: " .. WindowConfig.Name)
-    -- 【ここにウィンドウのGui枠組み作成や、ドラッグ処理などを書きます】
-
-    -- ===================================================
-    -- 3. タブの作成（Window:MakeTab）
-    -- ===================================================
-    function Window:MakeTab(TabConfig)
-        TabConfig = TabConfig or {}
-        TabConfig.Name = TabConfig.Name or "Tab"
-        TabConfig.Icon = TabConfig.Icon or ""
-
-        local Tab = {}
-        print("タブを作成しました: " .. TabConfig.Name)
-        -- 【ここにタブボタンの作成や、中身を入れるコンテナGui作成処理を書きます】
-
-        -- ===================================================
-        -- 4. タブ内要素（Label, Buttonなど）
-        -- ===================================================
-        
-        -- 4-1. ラベルの追加
-        function Tab:AddLabel(Text)
-            print("ラベルを追加: " .. Text)
-            -- 【ここにラベルのGui作成処理】
-            
-            local LabelActions = {}
-            function LabelActions:Set(NewText)
-                print("ラベルを変更: " .. NewText)
-                -- 【テキストの更新処理】
-            end
-            return LabelActions
-        end
-
-        -- 4-2. パラグラフ（説明文）の追加
-        function Tab:AddParagraph(Title, Content)
-            print("パラグラフを追加: " .. Title)
-            -- 【ここにパラグラフのGui作成処理】
-            
-            local ParagraphActions = {}
-            function ParagraphActions:Set(NewTitle, NewContent)
-                -- 【テキストの更新処理】
-            end
-            return ParagraphActions
-        end
-
-        -- 4-3. ボタンの追加
-        function Tab:AddButton(ButtonConfig)
-            ButtonConfig.Name = ButtonConfig.Name or "Button"
-            ButtonConfig.Callback = ButtonConfig.Callback or function() end
-
-            print("ボタンを追加: " .. ButtonConfig.Name)
-            -- 【ここにボタンGui作成、MouseButton1Click時にCallbackを実行する処理】
-        end
-
-        -- 4-4. トグルの追加
-        function Tab:AddToggle(ToggleConfig)
-            ToggleConfig.Name = ToggleConfig.Name or "Toggle"
-            ToggleConfig.Default = ToggleConfig.Default or false
-            ToggleConfig.Callback = ToggleConfig.Callback or function() end
-
-            print("トグルを追加: " .. ToggleConfig.Name)
-            -- 【ここにトグルGui作成、クリック時のON/OFF切り替えとCallback実行処理】
-
-            local ToggleActions = {}
-            function ToggleActions:Set(Value)
-                -- 【トグルの状態をプログラムから変更する処理】
-            end
-            return ToggleActions
-        end
-
-        -- 4-5. スライダーの追加
-        function Tab:AddSlider(SliderConfig)
-            SliderConfig.Name = SliderConfig.Name or "Slider"
-            SliderConfig.Min = SliderConfig.Min or 0
-            SliderConfig.Max = SliderConfig.Max or 100
-            SliderConfig.Default = SliderConfig.Default or 50
-            SliderConfig.Callback = SliderConfig.Callback or function() end
-
-            print("スライダーを追加: " .. SliderConfig.Name)
-            
-            local SliderActions = {}
-            function SliderActions:Set(Value)
-                -- 【スライダーの値をプログラムから変更する処理】
-            end
-            return SliderActions
-        end
-
-        -- 4-6. ドロップダウンの追加
-        function Tab:AddDropdown(DropdownConfig)
-            DropdownConfig.Name = DropdownConfig.Name or "Dropdown"
-            DropdownConfig.Default = DropdownConfig.Default or ""
-            DropdownConfig.Options = DropdownConfig.Options or {}
-            DropdownConfig.Callback = DropdownConfig.Callback or function() end
-
-            print("ドロップダウンを追加: " .. DropdownConfig.Name)
-            
-            local DropdownActions = {}
-            function DropdownActions:Refresh(NewOptions, DeleteCurrent)
-                -- 【選択肢を更新する処理】
-            end
-            return DropdownActions
-        end
-
-        return Tab -- ここでTabの中身（各追加関数）を返すことでOrionと同じ使い方が可能になります
+function CustomUILib:MakeWindow(Config)
+    local title = Config.Name or "My Custom UI"
+    
+    -- 安全なUIの出力先を決定
+    local player = game:GetService("Players").LocalPlayer
+    local success, coreGui = pcall(function() return game:GetService("CoreGui") end)
+    local targetGui = (success and coreGui) and coreGui or player:WaitForChild("PlayerGui")
+    
+    -- 古いUIが残っていたら削除
+    if targetGui:FindFirstChild("MyExternalUI") then
+        targetGui.MyExternalUI:Destroy()
     end
-
-    return Window -- ここでWindowの中身（MakeTab）を返します
+    
+    -- メイン画面の作成
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "MyExternalUI"
+    ScreenGui.Parent = targetGui
+    
+    local MainFrame = Instance.new("Frame", ScreenGui)
+    MainFrame.Size = UDim2.new(0, 350, 0, 200)
+    MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    MainFrame.Active = true
+    MainFrame.Draggable = true -- ドラッグ移動可能
+    Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 6)
+    
+    -- タイトルの作成
+    local Title = Instance.new("TextLabel", MainFrame)
+    Title.Size = UDim2.new(1, 0, 0, 35)
+    Title.BackgroundTransparency = 1
+    Title.Text = "   " .. title
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 14
+    
+    -- 要素を入れるコンテナ
+    local Container = Instance.new("Frame", MainFrame)
+    Container.Size = UDim2.new(1, -20, 1, -45)
+    Container.Position = UDim2.new(0, 10, 0, 35)
+    Container.BackgroundTransparency = 1
+    
+    local ListLayout = Instance.new("UIListLayout", Container)
+    ListLayout.Padding = UDim.new(0, 8)
+    
+    local Window = {}
+    
+    -- スライダー（数値入力式）を作る関数
+    function Window:AddSlider(SliderConfig)
+        local name = SliderConfig.Name or "Slider"
+        local min = SliderConfig.Min or 0
+        local max = SliderConfig.Max or 100
+        local def = SliderConfig.Default or 50
+        local callback = SliderConfig.Callback or function() end
+        
+        local SliderFrame = Instance.new("Frame", Container)
+        SliderFrame.Size = UDim2.new(1, 0, 0, 35)
+        SliderFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0, 4)
+        
+        local Label = Instance.new("TextLabel", SliderFrame)
+        Label.Size = UDim2.new(0.6, 0, 1, 0)
+        Label.Position = UDim2.new(0, 10, 0, 0)
+        Label.BackgroundTransparency = 1
+        Label.Text = name
+        Label.TextColor3 = Color3.fromRGB(220, 220, 220)
+        Label.TextXAlignment = Enum.TextXAlignment.Left
+        Label.Font = Enum.Font.GothamSemibold
+        Label.TextSize = 13
+        
+        local TextBox = Instance.new("TextBox", SliderFrame)
+        TextBox.Size = UDim2.new(0.3, 0, 0.7, 0)
+        TextBox.Position = UDim2.new(0.65, 0, 0.15, 0)
+        TextBox.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+        TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TextBox.Text = tostring(def)
+        TextBox.Font = Enum.Font.Gotham
+        Instance.new("UICorner", TextBox).CornerRadius = UDim.new(0, 4)
+        
+        -- エンターキーで値を反映する処理
+        TextBox.FocusLost:Connect(function()
+            local val = tonumber(TextBox.Text)
+            if val then
+                val = math.clamp(val, min, max)
+                TextBox.Text = tostring(val)
+                callback(val)
+            else
+                TextBox.Text = tostring(def)
+            end
+        end)
+    end
+    
+    return Window
 end
 
--- ===================================================
--- 5. ライブラリの初期化（OrionLib:Init）
--- ===================================================
-function CustomLib:Init()
-    print("ライブラリを初期化しました。")
-    -- 【必要に応じて、UIの表示や設定のロードを行います】
-end
-
-return CustomLib
+return CustomUILib

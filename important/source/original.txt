@@ -343,14 +343,15 @@ CreateElement("Frame", function(Color)
 	return Frame
 end)
 
-CreateElement("RoundFrame", function(Color, Scale, Offset)
-	local Frame = Create("Frame", {
-		BackgroundColor3 = Color or Color3.fromRGB(255, 255, 255),
+CreateElement("RoundFrame", function(Color, _, _)
+	local Frame = Create("ImageLabel", {
+		Name = "ChamferFrame",
+		Image = "rbxassetid://4595678762", -- 面取り（切削）形状のベース画像
+		ImageColor3 = Color or Color3.fromRGB(255, 255, 255),
+		ScaleType = Enum.ScaleType.Slice,
+		SliceCenter = Rect.new(12, 12, 12, 12), -- 角の形状を維持するスライス設定
+		BackgroundTransparency = 1,
 		BorderSizePixel = 0
-	}, {
-		Create("UICorner", {
-			CornerRadius = UDim.new(Scale, Offset)
-		})
 	})
 	return Frame
 end)
@@ -1545,8 +1546,8 @@ function HolonLib:MakeWindow(WindowConfig)
 					BackgroundTransparency = 1,
 					TextColor3 = Color3.fromRGB(255, 255, 255),
 					PlaceholderColor3 = Color3.fromRGB(210,210,210),
-					PlaceholderText = "[ INPUT ]",
-					Font = Enum.Font.GothamSemibold,
+					PlaceholderText = "[SYSTEM_INPUT]",
+					Font = Enum.Font.RobotoMono,
 					TextXAlignment = Enum.TextXAlignment.Center,
 					TextSize = 14,
 					ClearTextOnFocus = false

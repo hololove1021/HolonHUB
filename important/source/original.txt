@@ -1,66 +1,158 @@
--- [[ 1. ライブラリ本体のテーブル定義 ]]
-local CustomLib = {}
-CustomLib.Theme = {
-    Background = Color3.fromRGB(30, 30, 30),
-    Accent = Color3.fromRGB(0, 120, 215),
-    TextColor = Color3.fromRGB(255, 255, 255)
+-- [[ 独自のUIライブラリ作成用テンプレート ]]
+-- Orion Libraryの関数構造やオプションを再現しています。
+
+local CustomLib = {
+    Themes = {
+        Default = {
+            Main = Color3.fromRGB(25, 25, 25),
+            Second = Color3.fromRGB(32, 32, 32),
+            Stroke = Color3.fromRGB(60, 60, 60),
+            Divider = Color3.fromRGB(60, 60, 60),
+            Text = Color3.fromRGB(240, 240, 240),
+            TextDark = Color3.fromRGB(150, 150, 150)
+        }
+    },
+    SelectedTheme = "Default"
 }
 
--- [[ 2. メインウィンドウを作る関数 ]]
-function CustomLib:CreateWindow(libName)
-    local Window = {} -- ウィンドウ用のメソッドを格納するテーブル
-    
-    -- 実際にRoblox上にGuiを作成
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = libName
-    ScreenGui.ResetOnSpawn = false
-    -- 通常はエクスプロイト等の場合は CoreGui、通常のゲーム開発なら PlayerGui に入れます
-    ScreenGui.Parent = game:GetService("CoreGui") 
-    
-    local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 500, 0, 350)
-    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
-    MainFrame.BackgroundColor3 = CustomLib.Theme.Background
-    MainFrame.Parent = ScreenGui
-    
-    -- タイトルラベル
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, 0, 0, 30)
-    Title.Text = libName
-    Title.TextColor3 = CustomLib.Theme.TextColor
-    Title.BackgroundColor3 = CustomLib.Theme.Accent
-    Title.Parent = MainFrame
+-- ===================================================
+-- 1. 通知機能（OrionLib:MakeNotification）
+-- ===================================================
+function CustomLib:MakeNotification(NotificationConfig)
+    NotificationConfig.Name = NotificationConfig.Name or "Notification"
+    NotificationConfig.Content = NotificationConfig.Content or "Content"
+    NotificationConfig.Image = NotificationConfig.Image or "rbxassetid://4384403532"
+    NotificationConfig.Time = NotificationConfig.Time or 5
 
-    -- タブを配置するコンテナ
-    local TabContainer = Instance.new("Frame")
-    TabContainer.Size = UDim2.new(1, 0, 1, -30)
-    TabContainer.Position = UDim2.new(0, 0, 0, 30)
-    TabContainer.BackgroundTransparency = 1
-    TabContainer.Parent = MainFrame
+    print("通知を表示しました: " .. NotificationConfig.Name)
+    -- 【ここに実際の通知用のGui作成・アニメーション処理を書きます】
+end
 
-    -- [[ 3. タブを作る関数（ウィンドウの子供） ]]
-    function Window:CreateTab(tabName)
-        local Tab = {} -- タブ用のメソッドを格納するテーブル
+-- ===================================================
+-- 2. メインウィンドウの作成（OrionLib:MakeWindow）
+-- ===================================================
+function CustomLib:MakeWindow(WindowConfig)
+    WindowConfig = WindowConfig or {}
+    WindowConfig.Name = WindowConfig.Name or "Orion Library"
+    WindowConfig.IntroEnabled = WindowConfig.IntroEnabled ~= nil and WindowConfig.IntroEnabled or true
+    WindowConfig.IntroText = WindowConfig.IntroText or "Orion Library"
+    WindowConfig.KeyToOpenWindow = WindowConfig.KeyToOpenWindow or "K"
+
+    local Window = {}
+    print("ウィンドウを作成しました: " .. WindowConfig.Name)
+    -- 【ここにウィンドウのGui枠組み作成や、ドラッグ処理などを書きます】
+
+    -- ===================================================
+    -- 3. タブの作成（Window:MakeTab）
+    -- ===================================================
+    function Window:MakeTab(TabConfig)
+        TabConfig = TabConfig or {}
+        TabConfig.Name = TabConfig.Name or "Tab"
+        TabConfig.Icon = TabConfig.Icon or ""
+
+        local Tab = {}
+        print("タブを作成しました: " .. TabConfig.Name)
+        -- 【ここにタブボタンの作成や、中身を入れるコンテナGui作成処理を書きます】
+
+        -- ===================================================
+        -- 4. タブ内要素（Label, Buttonなど）
+        -- ===================================================
         
-        -- ここにタブ切り替えのボタンや、要素を置くフレームを作る処理を書きます
-        
-        -- [[ 4. ボタンなどの要素を作る関数（タブの子供） ]]
-        function Tab:AddButton(btnText, callback)
-            local Button = Instance.new("TextButton")
-            Button.Size = UDim2.new(0, 200, 0, 40)
-            Button.Text = btnText
-            Button.Parent = TabContainer -- 本来は該当するタブのフレームに入れます
+        -- 4-1. ラベルの追加
+        function Tab:AddLabel(Text)
+            print("ラベルを追加: " .. Text)
+            -- 【ここにラベルのGui作成処理】
             
-            -- ボタンが押されたら、ユーザーが指定した関数(callback)を実行
-            Button.MouseButton1Click:Connect(function()
-                callback()
-            end)
+            local LabelActions = {}
+            function LabelActions:Set(NewText)
+                print("ラベルを変更: " .. NewText)
+                -- 【テキストの更新処理】
+            end
+            return LabelActions
         end
-        
-        return Tab -- AddButtonなどの機能を持ったテーブルを返す
+
+        -- 4-2. パラグラフ（説明文）の追加
+        function Tab:AddParagraph(Title, Content)
+            print("パラグラフを追加: " .. Title)
+            -- 【ここにパラグラフのGui作成処理】
+            
+            local ParagraphActions = {}
+            function ParagraphActions:Set(NewTitle, NewContent)
+                -- 【テキストの更新処理】
+            end
+            return ParagraphActions
+        end
+
+        -- 4-3. ボタンの追加
+        function Tab:AddButton(ButtonConfig)
+            ButtonConfig.Name = ButtonConfig.Name or "Button"
+            ButtonConfig.Callback = ButtonConfig.Callback or function() end
+
+            print("ボタンを追加: " .. ButtonConfig.Name)
+            -- 【ここにボタンGui作成、MouseButton1Click時にCallbackを実行する処理】
+        end
+
+        -- 4-4. トグルの追加
+        function Tab:AddToggle(ToggleConfig)
+            ToggleConfig.Name = ToggleConfig.Name or "Toggle"
+            ToggleConfig.Default = ToggleConfig.Default or false
+            ToggleConfig.Callback = ToggleConfig.Callback or function() end
+
+            print("トグルを追加: " .. ToggleConfig.Name)
+            -- 【ここにトグルGui作成、クリック時のON/OFF切り替えとCallback実行処理】
+
+            local ToggleActions = {}
+            function ToggleActions:Set(Value)
+                -- 【トグルの状態をプログラムから変更する処理】
+            end
+            return ToggleActions
+        end
+
+        -- 4-5. スライダーの追加
+        function Tab:AddSlider(SliderConfig)
+            SliderConfig.Name = SliderConfig.Name or "Slider"
+            SliderConfig.Min = SliderConfig.Min or 0
+            SliderConfig.Max = SliderConfig.Max or 100
+            SliderConfig.Default = SliderConfig.Default or 50
+            SliderConfig.Callback = SliderConfig.Callback or function() end
+
+            print("スライダーを追加: " .. SliderConfig.Name)
+            
+            local SliderActions = {}
+            function SliderActions:Set(Value)
+                -- 【スライダーの値をプログラムから変更する処理】
+            end
+            return SliderActions
+        end
+
+        -- 4-6. ドロップダウンの追加
+        function Tab:AddDropdown(DropdownConfig)
+            DropdownConfig.Name = DropdownConfig.Name or "Dropdown"
+            DropdownConfig.Default = DropdownConfig.Default or ""
+            DropdownConfig.Options = DropdownConfig.Options or {}
+            DropdownConfig.Callback = DropdownConfig.Callback or function() end
+
+            print("ドロップダウンを追加: " .. DropdownConfig.Name)
+            
+            local DropdownActions = {}
+            function DropdownActions:Refresh(NewOptions, DeleteCurrent)
+                -- 【選択肢を更新する処理】
+            end
+            return DropdownActions
+        end
+
+        return Tab -- ここでTabの中身（各追加関数）を返すことでOrionと同じ使い方が可能になります
     end
-    
-    return Window -- CreateTabの機能を持ったテーブルを返す
+
+    return Window -- ここでWindowの中身（MakeTab）を返します
+end
+
+-- ===================================================
+-- 5. ライブラリの初期化（OrionLib:Init）
+-- ===================================================
+function CustomLib:Init()
+    print("ライブラリを初期化しました。")
+    -- 【必要に応じて、UIの表示や設定のロードを行います】
 end
 
 return CustomLib

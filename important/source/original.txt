@@ -107,6 +107,24 @@ task.spawn(function()
 	end
 end)
 
+-- 未来的なカラーアニメーション（RGBサイクル）
+task.spawn(function()
+	local hue = 0
+	while task.wait() do
+		if HolonLib:IsRunning() then
+			hue = (hue + 0.002) % 1
+			local rainbowColor = Color3.fromHSV(hue, 0.7, 1)
+			HolonLib.Themes.Default.Stroke = rainbowColor
+			-- Stroke（枠線・アクセント）に登録されているオブジェクトの色をリアルタイム更新
+			if HolonLib.ThemeObjects["Stroke"] then
+				for _, obj in pairs(HolonLib.ThemeObjects["Stroke"]) do
+					obj[ReturnProperty(obj)] = rainbowColor
+				end
+			end
+		end
+	end
+end)
+
 local function MakeDraggable(DragPoint, Main)
 	pcall(function()
 		local Dragging, DragInput, MousePos, FramePos = false
@@ -1685,10 +1703,13 @@ function HolonLib:MakeWindow(WindowConfig)
 						}), "Text"),
 						ColorpickerBox,
 						Click,
+						AddThemeObject(SetProps(MakeElement("Frame"), {
+							Size = UDim2.new(1, 0, 0, 1),
+							Position = UDim2.new(0, 0, 1, -1),
 							Name = "Line",
 							Visible = false
-						}), "Stroke"), 
-					}), {
+						}), "Stroke"),
+					}, {
 						Size = UDim2.new(1, 0, 0, 38),
 						ClipsDescendants = true,
 						Name = "F"

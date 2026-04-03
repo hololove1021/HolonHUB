@@ -344,14 +344,15 @@ CreateElement("Frame", function(Color)
 end)
 
 CreateElement("RoundFrame", function(Color, _, _)
-	local Frame = Create("ImageLabel", {
-		Name = "ChamferFrame",
-		Image = "rbxassetid://4595678762", -- 面取り（切削）形状のベース画像
+	local Frame = Create("ImageButton", {
+		Name = "HexFrame",
+		Image = "rbxassetid://12502789182", -- 深いヘキサゴン・カットのSFフレーム画像
 		ImageColor3 = Color or Color3.fromRGB(255, 255, 255),
 		ScaleType = Enum.ScaleType.Slice,
-		SliceCenter = Rect.new(12, 12, 12, 12), -- 角の形状を維持するスライス設定
+		SliceCenter = Rect.new(32, 32, 32, 32), -- 六角形の傾斜を崩さないためのスライス設定
 		BackgroundTransparency = 1,
-		BorderSizePixel = 0
+		BorderSizePixel = 0,
+		AutoButtonColor = false
 	})
 	return Frame
 end)
@@ -446,10 +447,10 @@ function HolonLib:MakeNotification(NotificationConfig)
 			Parent = NotificationParent, 
 			Size = UDim2.new(1, 0, 0, 0),
 			Position = UDim2.new(1, -55, 0, 0),
-			BackgroundTransparency = 0,
+			BackgroundTransparency = 1, -- 画像ベースにするため背景は透明に
 			AutomaticSize = Enum.AutomaticSize.Y
 		}), {
-			MakeElement("Stroke", Color3.fromRGB(0, 200, 255), 1.5),
+			-- ヘキサゴン形状を保つため、矩形のUIStrokeは削除し、画像内のボーダーを優先
 			MakeElement("Padding", 12, 12, 12, 12),
 			SetProps(MakeElement("Image", NotificationConfig.Image), {
 				Size = UDim2.new(0, 20, 0, 20),
@@ -661,9 +662,9 @@ function HolonLib:MakeWindow(WindowConfig)
 
 	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
 		Size = UDim2.new(1, -30, 2, 0),
-		Position = UDim2.new(0, 25, 0, -24),
+		Position = UDim2.new(0, 30, 0, -24), -- 少し右に寄せてヘキサゴンの角と重ならないように
 		Font = Enum.Font.RobotoMono,
-		TextSize = 20
+		TextSize = 18
 	}), "Text")
 
 	local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
@@ -865,7 +866,7 @@ function HolonLib:MakeWindow(WindowConfig)
 			}), "Text"),
 			AddThemeObject(SetProps(MakeElement("Label", TabConfig.Name, 14), {
 				Size = UDim2.new(1, -35, 1, 0),
-				Position = UDim2.new(0, 35, 0, 0),
+				Position = UDim2.new(0, 40, 0, 0),
 				Font = Enum.Font.RobotoMono,
 				TextTransparency = 0.4,
 				Name = "Title"
@@ -923,7 +924,6 @@ function HolonLib:MakeWindow(WindowConfig)
 			function ElementFunction:AddLabel(Text)
 				local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
 					Size = UDim2.new(1, 0, 0, 30),
-					BackgroundTransparency = 0.7,
 					Parent = ItemParent
 				}), {
 					AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
@@ -932,7 +932,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke")
 				}), "Second")
 
 				local LabelFunction = {}
@@ -947,7 +946,6 @@ function HolonLib:MakeWindow(WindowConfig)
 
 				local ParagraphFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
 					Size = UDim2.new(1, 0, 0, 30),
-					BackgroundTransparency = 0.7,
 					Parent = ItemParent
 				}), {
 					AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
@@ -962,8 +960,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content",
 						TextWrapped = true
-					}), "TextDark"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke")
+					}), "TextDark")
 				}), "Second")
 
 				AddConnection(ParagraphFrame.Content:GetPropertyChangedSignal("Text"), function()
@@ -1005,7 +1002,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Size = UDim2.new(0, 20, 0, 20),
 						Position = UDim2.new(1, -30, 0, 7),
 					}), "TextDark"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					Click
 				}), "Second")
 
@@ -1078,7 +1074,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					ToggleBox,
 					Click
 				}), "Second")
@@ -1174,7 +1169,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					SliderBar
 				}), "Second")
 
@@ -1319,10 +1313,8 @@ function HolonLib:MakeWindow(WindowConfig)
 						Click
 					}), {
 						Size = UDim2.new(1, 0, 0, 38),
-						ClipsDescendants = true,
 						Name = "F"
 					}),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					MakeElement("Corner")
 				}), "Second")
 
@@ -1333,7 +1325,7 @@ function HolonLib:MakeWindow(WindowConfig)
 				local function AddOptions(Options)
 					for _, Option in pairs(Options) do
 						local OptionBtn = AddThemeObject(SetProps(SetChildren(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
-							MakeElement("Corner", 0, 6),
+							-- ヘキサゴン形状を崩さないため、各項目のCornerは削除
 							AddThemeObject(SetProps(MakeElement("Label", Option, 13, 0.4), {
 								Position = UDim2.new(0, 8, 0, 0),
 								Size = UDim2.new(1, -8, 1, 0),
@@ -1428,7 +1420,6 @@ function HolonLib:MakeWindow(WindowConfig)
 					Position = UDim2.new(1, -12, 0.5, 0),
 					AnchorPoint = Vector2.new(1, 0.5)
 				}), {
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					AddThemeObject(SetProps(MakeElement("Label", BindConfig.Name, 14), {
 						Size = UDim2.new(1, 0, 1, 0),
 						Font = Enum.Font.RobotoMono,
@@ -1447,7 +1438,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					BindBox,
 					Click
 				}), "Second")
@@ -1558,7 +1548,6 @@ function HolonLib:MakeWindow(WindowConfig)
 					Position = UDim2.new(1, -12, 0.5, 0),
 					AnchorPoint = Vector2.new(1, 0.5)
 				}), {
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					TextboxActual
 				}), "Main")
 
@@ -1573,7 +1562,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 					TextContainer,
 					Click
 				}), "Second")
@@ -1682,7 +1670,6 @@ function HolonLib:MakeWindow(WindowConfig)
 					Position = UDim2.new(1, -12, 0.5, 0),
 					AnchorPoint = Vector2.new(1, 0.5)
 				}), {
-					AddThemeObject(MakeElement("Stroke"), "Stroke")
 				}), "Main")
 
 				local ColorpickerFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
@@ -1698,9 +1685,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						}), "Text"),
 						ColorpickerBox,
 						Click,
-						AddThemeObject(SetProps(MakeElement("Frame"), {
-							Size = UDim2.new(1, 0, 0, 1),
-							Position = UDim2.new(0, 0, 1, -1),
 							Name = "Line",
 							Visible = false
 						}), "Stroke"), 
@@ -1710,7 +1694,6 @@ function HolonLib:MakeWindow(WindowConfig)
 						Name = "F"
 					}),
 					ColorpickerContainer,
-					AddThemeObject(MakeElement("Stroke"), "Stroke"),
 				}), "Second")
 
 				AddConnection(Click.MouseButton1Click, function()

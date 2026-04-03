@@ -107,18 +107,21 @@ task.spawn(function()
 	end
 end)
 
--- 未来的なカラーアニメーション（RGBサイクル）
+-- 未来的なカラーアニメーション（サイバーパンク・グラデーション）
 task.spawn(function()
-	local hue = 0
 	while task.wait() do
 		if HolonLib:IsRunning() then
-			hue = (hue + 0.002) % 1
-			local rainbowColor = Color3.fromHSV(hue, 0.7, 1)
-			HolonLib.Themes.Default.Stroke = rainbowColor
+			-- シアン(0.5)からマゼンタ(0.8)の間をサイン波で往復させる
+			local wave = math.sin(tick() * 0.8) * 0.15 + 0.65 
+			local futuristicColor = Color3.fromHSV(wave, 0.8, 1)
+			
+			HolonLib.Themes.Default.Stroke = futuristicColor
+			
 			-- Stroke（枠線・アクセント）に登録されているオブジェクトの色をリアルタイム更新
 			if HolonLib.ThemeObjects["Stroke"] then
 				for _, obj in pairs(HolonLib.ThemeObjects["Stroke"]) do
-					obj[ReturnProperty(obj)] = rainbowColor
+					local prop = ReturnProperty(obj)
+					if prop then obj[prop] = futuristicColor end
 				end
 			end
 		end
@@ -682,13 +685,13 @@ function HolonLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(1, -30, 2, 0),
 		Position = UDim2.new(0, 30, 0, -24), -- 少し右に寄せてヘキサゴンの角と重ならないように
 		Font = Enum.Font.RobotoMono,
-		TextSize = 18
+		TextSize = 17
 	}), "Text")
 
 	local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
 		Size = UDim2.new(1, 0, 0, 1),
 		Position = UDim2.new(0, 0, 1, -1)
-	}), "Stroke")
+	}), "Divider")
 
 	local MainWindow = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 		Parent = Holon,
@@ -696,35 +699,26 @@ function HolonLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(0, 615, 0, 344),
 		ClipsDescendants = true
 	}), {
-		--SetProps(MakeElement("Image", "rbxassetid://3523728077"), {
-		--	AnchorPoint = Vector2.new(0.5, 0.5),
-		--	Position = UDim2.new(0.5, 0, 0.5, 0),
-		--	Size = UDim2.new(1, 80, 1, 320),
-		--	ImageColor3 = Color3.fromRGB(33, 33, 33),
-		--	ImageTransparency = 0.7
-		--}),
 		SetChildren(SetProps(MakeElement("TFrame"), {
 			Size = UDim2.new(1, 0, 0, 50),
 			Name = "TopBar"
 		}), {
 			WindowName,
-			WindowTopBarLine,
 			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 0), {
 				Size = UDim2.new(0, 70, 0, 30),
 				Position = UDim2.new(1, -90, 0, 10)
 			}), {
-				AddThemeObject(MakeElement("Stroke"), "Stroke"),
 				AddThemeObject(SetProps(MakeElement("Frame"), {
 					Size = UDim2.new(0, 1, 1, 0),
 					Position = UDim2.new(0.5, 0, 0, 0)
 				}), "Stroke"), 
 				CloseBtn,
 				MinimizeBtn
-			}), "Second"), 
+			}), "Stroke"), 
 		}),
 		DragPoint,
 		WindowStuff
-	}), "Main")
+	}), "Stroke")
 
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
@@ -1703,13 +1697,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						}), "Text"),
 						ColorpickerBox,
 						Click,
-						AddThemeObject(SetProps(MakeElement("Frame"), {
-							Size = UDim2.new(1, 0, 0, 1),
-							Position = UDim2.new(0, 0, 1, -1),
-							Name = "Line",
-							Visible = false
-						}), "Stroke"),
-					}, {
+					}), {
 						Size = UDim2.new(1, 0, 0, 38),
 						ClipsDescendants = true,
 						Name = "F"

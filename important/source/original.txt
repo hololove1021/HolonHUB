@@ -1,0 +1,66 @@
+-- [[ 1. ライブラリ本体のテーブル定義 ]]
+local CustomLib = {}
+CustomLib.Theme = {
+    Background = Color3.fromRGB(30, 30, 30),
+    Accent = Color3.fromRGB(0, 120, 215),
+    TextColor = Color3.fromRGB(255, 255, 255)
+}
+
+-- [[ 2. メインウィンドウを作る関数 ]]
+function CustomLib:CreateWindow(libName)
+    local Window = {} -- ウィンドウ用のメソッドを格納するテーブル
+    
+    -- 実際にRoblox上にGuiを作成
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = libName
+    ScreenGui.ResetOnSpawn = false
+    -- 通常はエクスプロイト等の場合は CoreGui、通常のゲーム開発なら PlayerGui に入れます
+    ScreenGui.Parent = game:GetService("CoreGui") 
+    
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 500, 0, 350)
+    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -175)
+    MainFrame.BackgroundColor3 = CustomLib.Theme.Background
+    MainFrame.Parent = ScreenGui
+    
+    -- タイトルラベル
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, 0, 0, 30)
+    Title.Text = libName
+    Title.TextColor3 = CustomLib.Theme.TextColor
+    Title.BackgroundColor3 = CustomLib.Theme.Accent
+    Title.Parent = MainFrame
+
+    -- タブを配置するコンテナ
+    local TabContainer = Instance.new("Frame")
+    TabContainer.Size = UDim2.new(1, 0, 1, -30)
+    TabContainer.Position = UDim2.new(0, 0, 0, 30)
+    TabContainer.BackgroundTransparency = 1
+    TabContainer.Parent = MainFrame
+
+    -- [[ 3. タブを作る関数（ウィンドウの子供） ]]
+    function Window:CreateTab(tabName)
+        local Tab = {} -- タブ用のメソッドを格納するテーブル
+        
+        -- ここにタブ切り替えのボタンや、要素を置くフレームを作る処理を書きます
+        
+        -- [[ 4. ボタンなどの要素を作る関数（タブの子供） ]]
+        function Tab:AddButton(btnText, callback)
+            local Button = Instance.new("TextButton")
+            Button.Size = UDim2.new(0, 200, 0, 40)
+            Button.Text = btnText
+            Button.Parent = TabContainer -- 本来は該当するタブのフレームに入れます
+            
+            -- ボタンが押されたら、ユーザーが指定した関数(callback)を実行
+            Button.MouseButton1Click:Connect(function()
+                callback()
+            end)
+        end
+        
+        return Tab -- AddButtonなどの機能を持ったテーブルを返す
+    end
+    
+    return Window -- CreateTabの機能を持ったテーブルを返す
+end
+
+return CustomLib

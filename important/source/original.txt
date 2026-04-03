@@ -364,15 +364,13 @@ CreateElement("Frame", function(Color)
 end)
 
 CreateElement("RoundFrame", function(Color, _, _)
-	local Frame = Create("ImageButton", {
-		Name = "TacticalFrame",
-		Image = "rbxassetid://4595678762", -- シャープな面取り（45度カット）画像
-		ImageColor3 = Color or Color3.fromRGB(255, 255, 255),
-		ScaleType = Enum.ScaleType.Slice,
-		SliceCenter = Rect.new(12, 12, 12, 12), -- 角の形状を維持
-		BackgroundTransparency = 1,
+	local Frame = Create("Frame", {
+		Name = "IndustrialFrame",
+		BackgroundColor3 = Color or Color3.fromRGB(15, 15, 20),
+		BackgroundTransparency = 0, -- 不透明に設定
 		BorderSizePixel = 0,
-		AutoButtonColor = false
+	}, {
+		Create("UICorner", {CornerRadius = UDim.new(0, 2)}) -- 鋭い角丸
 	})
 	return Frame
 end)
@@ -467,10 +465,10 @@ function HolonLib:MakeNotification(NotificationConfig)
 			Parent = NotificationParent, 
 			Size = UDim2.new(1, 0, 0, 0),
 			Position = UDim2.new(1, -55, 0, 0),
-			BackgroundTransparency = 1, -- 画像ベースにするため背景は透明に
+			BackgroundTransparency = 0,
 			AutomaticSize = Enum.AutomaticSize.Y
 		}), {
-			-- ヘキサゴン形状を保つため、矩形のUIStrokeは削除し、画像内のボーダーを優先
+			AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 			MakeElement("Padding", 12, 12, 12, 12),
 			SetProps(MakeElement("Image", NotificationConfig.Image), {
 				Size = UDim2.new(0, 20, 0, 20),
@@ -698,6 +696,7 @@ function HolonLib:MakeWindow(WindowConfig)
 		Size = UDim2.new(0, 615, 0, 344),
 		ClipsDescendants = true
 	}), {
+		AddThemeObject(MakeElement("Stroke", nil, 1.5), "Stroke"), -- 明滅する外枠
 		SetChildren(SetProps(MakeElement("TFrame"), {
 			Size = UDim2.new(1, 0, 0, 50),
 			Name = "TopBar"
@@ -717,7 +716,7 @@ function HolonLib:MakeWindow(WindowConfig)
 		}),
 		DragPoint,
 		WindowStuff
-	}), "Stroke")
+	}), "Main")
 
 	if WindowConfig.ShowIcon then
 		WindowName.Position = UDim2.new(0, 50, 0, -24)
@@ -943,6 +942,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke")
 				}), "Second")
 
 				local LabelFunction = {}
@@ -971,7 +971,8 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content",
 						TextWrapped = true
-					}), "TextDark")
+					}), "TextDark"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke")
 				}), "Second")
 
 				AddConnection(ParagraphFrame.Content:GetPropertyChangedSignal("Text"), function()
@@ -1013,6 +1014,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Size = UDim2.new(0, 20, 0, 20),
 						Position = UDim2.new(1, -30, 0, 7),
 					}), "TextDark"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					Click
 				}), "Second")
 
@@ -1085,6 +1087,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					ToggleBox,
 					Click
 				}), "Second")
@@ -1180,6 +1183,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					SliderBar
 				}), "Second")
 
@@ -1326,6 +1330,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Size = UDim2.new(1, 0, 0, 38),
 						Name = "F"
 					}),
+						AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					MakeElement("Corner")
 				}), "Second")
 
@@ -1449,6 +1454,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					BindBox,
 					Click
 				}), "Second")
@@ -1573,6 +1579,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Font = Enum.Font.RobotoMono,
 						Name = "Content"
 					}), "Text"),
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 					TextContainer,
 					Click
 				}), "Second")
@@ -1702,6 +1709,7 @@ function HolonLib:MakeWindow(WindowConfig)
 						Name = "F"
 					}),
 					ColorpickerContainer,
+					AddThemeObject(MakeElement("Stroke", nil, 1), "Stroke"),
 				}), "Second")
 
 				AddConnection(Click.MouseButton1Click, function()

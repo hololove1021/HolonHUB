@@ -978,6 +978,52 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 				return ParagraphFunction
 			end    
+			function ElementFunction:AddScrollParagraph(Text, Content, Height)
+				Text = Text or "Text"
+				Content = Content or "Content"
+				Height = Height or 200
+
+				local ParagraphFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+					Size = UDim2.new(1, 0, 0, Height),
+					BackgroundTransparency = 0.7,
+					ClipsDescendants = true,
+					Parent = ItemParent
+				}), {
+					AddThemeObject(SetProps(MakeElement("Label", Text, 15), {
+						Size = UDim2.new(1, -12, 0, 14),
+						Position = UDim2.new(0, 12, 0, 10),
+						Font = Enum.Font.GothamBold,
+						Name = "Title"
+					}), "Text"),
+					AddThemeObject(MakeElement("Stroke"), "Stroke")
+				}), "Second")
+
+				local Scroll = AddThemeObject(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
+					Size = UDim2.new(1, -10, 1, -38),
+					Position = UDim2.new(0, 5, 0, 33),
+					Name = "Scroll",
+					Parent = ParagraphFrame
+				}), "Divider")
+
+				local ContentLabel = AddThemeObject(SetProps(MakeElement("Label", Content, 13), {
+					Size = UDim2.new(1, -10, 0, 0),
+					Font = Enum.Font.GothamSemibold,
+					Name = "Content",
+					TextWrapped = true,
+					AutomaticSize = Enum.AutomaticSize.Y,
+					Parent = Scroll
+				}), "TextDark")
+
+				AddConnection(ContentLabel:GetPropertyChangedSignal("TextBounds"), function()
+					Scroll.CanvasSize = UDim2.new(0, 0, 0, ContentLabel.TextBounds.Y)
+				end)
+
+				local ParagraphFunction = {Instance = ParagraphFrame}
+				function ParagraphFunction:Set(ToChange)
+					ContentLabel.Text = ToChange
+				end
+				return ParagraphFunction
+			end
 			function ElementFunction:AddButton(ButtonConfig)
 				ButtonConfig = ButtonConfig or {}
 				ButtonConfig.Name = ButtonConfig.Name or "Button"

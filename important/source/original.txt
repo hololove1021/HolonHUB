@@ -1345,19 +1345,22 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 
 				local function ApplySelectedVisual(OptionData)
+					local SelectedLabel = DropdownFrame.F:FindFirstChild("Selected")
+					local SelectedIcon = DropdownFrame.F:FindFirstChild("SelectedIcon")
+					if not (SelectedLabel and SelectedIcon) then return end
 					if not OptionData then
-						DropdownFrame.F.Selected.Text = "..."
-						DropdownFrame.F.SelectedIcon.Visible = false
-						DropdownFrame.F.SelectedIcon.Image = ""
+						SelectedLabel.Text = "..."
+						SelectedIcon.Visible = false
+						SelectedIcon.Image = ""
 						return
 					end
-					DropdownFrame.F.Selected.Text = OptionData.Text
+					SelectedLabel.Text = OptionData.Text
 					if OptionData.Icon and OptionData.Icon ~= "" then
-						DropdownFrame.F.SelectedIcon.Image = OptionData.Icon
-						DropdownFrame.F.SelectedIcon.Visible = true
+						SelectedIcon.Image = OptionData.Icon
+						SelectedIcon.Visible = true
 					else
-						DropdownFrame.F.SelectedIcon.Visible = false
-						DropdownFrame.F.SelectedIcon.Image = ""
+						SelectedIcon.Visible = false
+						SelectedIcon.Image = ""
 					end
 				end
 
@@ -1396,28 +1399,21 @@ function OrionLib:MakeWindow(WindowConfig)
 							ImageColor3 = Color3.fromRGB(240, 240, 240),
 							Name = "Ico"
 						}), "TextDark"),
-						SetProps(SetChildren(MakeElement("TFrame"), {
-							SetProps(MakeElement("Image"), {
-								Size = UDim2.new(0, 20, 0, 20),
-								AnchorPoint = Vector2.new(0, 0.5),
-								Position = UDim2.new(0, 0, 0.5, 0),
-								BackgroundTransparency = 1,
-								Name = "SelectedIcon",
-								Visible = false
-							}),
-							AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
-								Size = UDim2.new(1, -24, 1, 0),
-								Position = UDim2.new(0, 24, 0, 0),
-								Font = Enum.Font.Gotham,
-								Name = "Selected",
-								TextXAlignment = Enum.TextXAlignment.Left
-							}), "TextDark")
-						}), {
-							Size = UDim2.new(0, 220, 1, 0),
-							Position = UDim2.new(1, -250, 0, 0),
+						SetProps(MakeElement("Image"), {
+							Size = UDim2.new(0, 20, 0, 20),
+							AnchorPoint = Vector2.new(0, 0.5),
+							Position = UDim2.new(1, -220, 0.5, 0),
 							BackgroundTransparency = 1,
-							Name = "SelectedHolder"
+							Name = "SelectedIcon",
+							Visible = false
 						}),
+						AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
+							Size = UDim2.new(0, 190, 1, 0),
+							Position = UDim2.new(1, -196, 0, 0),
+							Font = Enum.Font.Gotham,
+							Name = "Selected",
+							TextXAlignment = Enum.TextXAlignment.Left
+						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),
 							Position = UDim2.new(0, 0, 1, -1),

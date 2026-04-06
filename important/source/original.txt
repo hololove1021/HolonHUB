@@ -1306,10 +1306,16 @@ function OrionLib:MakeWindow(WindowConfig)
 				DropdownConfig.Callback = DropdownConfig.Callback or function() end
 				DropdownConfig.Flag = DropdownConfig.Flag or nil
 				DropdownConfig.Save = DropdownConfig.Save or false
+				DropdownConfig.Search = DropdownConfig.Search
+				if DropdownConfig.Search == nil then
+					DropdownConfig.Search = true
+				end
 
 				local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
 				local MaxElements = 5
 				local DropdownFrame
+				local SearchText = ""
+				local SearchHeight = DropdownConfig.Search and 32 or 0
 
 				local function NormalizeOption(Option)
 					if type(Option) == "table" then
@@ -1374,6 +1380,8 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 
 				local DropdownList = MakeElement("List")
+				DropdownList.Name = "DropdownList"
+				DropdownList.Position = UDim2.new(0, 0, 0, SearchHeight)
 
 				local DropdownContainer = AddThemeObject(SetProps(SetChildren(MakeElement("ScrollFrame", Color3.fromRGB(40, 40, 40), 4), {
 					DropdownList
@@ -1439,13 +1447,47 @@ function OrionLib:MakeWindow(WindowConfig)
 					MakeElement("Corner")
 				}), "Second")
 
+				if DropdownConfig.Search then
+					local SearchBox = AddThemeObject(Create("TextBox", {
+						Size = UDim2.new(1, -16, 0, 24),
+						Position = UDim2.new(0, 8, 0, 4),
+						BackgroundTransparency = 1,
+						TextColor3 = Color3.fromRGB(255, 255, 255),
+						PlaceholderColor3 = Color3.fromRGB(170, 170, 170),
+						PlaceholderText = "Search...",
+						Font = Enum.Font.Gotham,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						TextSize = 13,
+						ClearTextOnFocus = false,
+						Name = "SearchBox"
+					}), "Text")
+
+					local SearchFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 4), {
+						Parent = DropdownContainer,
+						Size = UDim2.new(1, -16, 0, 24),
+						Position = UDim2.new(0, 8, 0, 4),
+						Name = "SearchFrame"
+					}), {
+						AddThemeObject(MakeElement("Stroke"), "Stroke"),
+						SearchBox
+					}), "Main")
+
+					AddConnection(SearchBox:GetPropertyChangedSignal("Text"), function()
+						SearchText = SearchBox.Text or ""
+						Dropdown:Refresh(Dropdown.Options, true)
+					end)
+				end
+
 				AddConnection(DropdownList:GetPropertyChangedSignal("AbsoluteContentSize"), function()
-					DropdownContainer.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y)
+					DropdownContainer.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y + SearchHeight)
 				end)  
 
 				local function AddOptions(Options)
 					for _, Option in pairs(Options) do
 						local OptionData = NormalizeOption(Option)
+						if SearchText ~= "" and not string.find(string.lower(OptionData.Text), string.lower(SearchText), 1, true) then
+							continue
+						end
 						local OptionBtn = AddThemeObject(SetProps(SetChildren(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
 							MakeElement("Corner", 0, 6),
 							SetProps(MakeElement("Image"), {
@@ -1527,9 +1569,9 @@ function OrionLib:MakeWindow(WindowConfig)
 					DropdownFrame.F.Line.Visible = Dropdown.Toggled
 					TweenService:Create(DropdownFrame.F.Ico,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play()
 					if #Dropdown.Options > MaxElements then
-						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, 38 + (MaxElements * 28)) or UDim2.new(1, 0, 0, 38)}):Play()
+						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, 38 + SearchHeight + (MaxElements * 28)) or UDim2.new(1, 0, 0, 38)}):Play()
 					else
-						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + 38) or UDim2.new(1, 0, 0, 38)}):Play()
+						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + 38 + SearchHeight) or UDim2.new(1, 0, 0, 38)}):Play()
 					end
 				end)
 

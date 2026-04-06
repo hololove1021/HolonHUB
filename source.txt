@@ -1405,7 +1405,7 @@ function OrionLib:MakeWindow(WindowConfig)
 						SetProps(MakeElement("Image"), {
 							Size = UDim2.new(0, 20, 0, 20),
 							AnchorPoint = Vector2.new(0, 0.5),
-							Position = UDim2.new(1, -56, 0.5, 0),
+							Position = UDim2.new(1, -96, 0.5, 0),
 							BackgroundTransparency = 1,
 							Name = "SelectedIcon",
 							Visible = false

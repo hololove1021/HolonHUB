@@ -1320,10 +1320,9 @@ function OrionLib:MakeWindow(WindowConfig)
 				local OptionHeight = DropdownConfig.OptionHeight
 				local HeaderHeight = DropdownConfig.HeaderHeight
 				local IconSize = DropdownConfig.IconSize
-				local HeaderIconPadding = 12
-				local SelectedRightPadding = 40
+				local SelectedRightPadding = 72
 				local HasSelectedIcon = DropdownConfig.SelectedIconProvider ~= nil
-				local SelectedIconOffset = HasSelectedIcon and (IconSize + 8) or 0
+				local SelectedIconOffset = HasSelectedIcon and (IconSize + 12) or 0
 
 				if not table.find(Dropdown.Options, Dropdown.Value) then
 					Dropdown.Value = "..."
@@ -1359,8 +1358,8 @@ function OrionLib:MakeWindow(WindowConfig)
 						}), "Text"),
 						SetProps(MakeElement("Image", ""), {
 							Size = UDim2.new(0, IconSize, 0, IconSize),
-							AnchorPoint = Vector2.new(0, 0.5),
-							Position = UDim2.new(0.5, 0, 0.5, 0),
+							AnchorPoint = Vector2.new(1, 0.5),
+							Position = UDim2.new(1, -42, 0.5, 0),
 							Name = "SelectedIcon",
 							Visible = false
 						}),
@@ -1404,7 +1403,6 @@ function OrionLib:MakeWindow(WindowConfig)
 					if SelectedImage and SelectedImage ~= "" then
 						SelectedIcon.Image = SelectedImage
 						SelectedIcon.Visible = true
-						SelectedIcon.Position = UDim2.new(1, -(SelectedRightPadding + SelectedIconOffset), 0.5, 0)
 					else
 						SelectedIcon.Visible = false
 					end

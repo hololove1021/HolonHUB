@@ -1350,15 +1350,24 @@ function OrionLib:MakeWindow(WindowConfig)
 					if not (SelectedLabel and SelectedIcon) then return end
 					if not OptionData then
 						SelectedLabel.Text = "..."
+						SelectedLabel.Size = UDim2.new(1, -40, 1, 0)
+						SelectedLabel.Position = UDim2.new(0, 0, 0, 0)
+						SelectedLabel.TextXAlignment = Enum.TextXAlignment.Right
 						SelectedIcon.Visible = false
 						SelectedIcon.Image = ""
 						return
 					end
 					SelectedLabel.Text = OptionData.Text
 					if OptionData.Icon and OptionData.Icon ~= "" then
+						SelectedLabel.Size = UDim2.new(0, 190, 1, 0)
+						SelectedLabel.Position = UDim2.new(1, -196, 0, 0)
+						SelectedLabel.TextXAlignment = Enum.TextXAlignment.Left
 						SelectedIcon.Image = OptionData.Icon
 						SelectedIcon.Visible = true
 					else
+						SelectedLabel.Size = UDim2.new(1, -40, 1, 0)
+						SelectedLabel.Position = UDim2.new(0, 0, 0, 0)
+						SelectedLabel.TextXAlignment = Enum.TextXAlignment.Right
 						SelectedIcon.Visible = false
 						SelectedIcon.Image = ""
 					end
@@ -1408,11 +1417,11 @@ function OrionLib:MakeWindow(WindowConfig)
 							Visible = false
 						}),
 						AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
-							Size = UDim2.new(0, 190, 1, 0),
-							Position = UDim2.new(1, -196, 0, 0),
+							Size = UDim2.new(1, -40, 1, 0),
+							Position = UDim2.new(0, 0, 0, 0),
 							Font = Enum.Font.Gotham,
 							Name = "Selected",
-							TextXAlignment = Enum.TextXAlignment.Left
+							TextXAlignment = Enum.TextXAlignment.Right
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),

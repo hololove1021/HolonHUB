@@ -1320,9 +1320,8 @@ function OrionLib:MakeWindow(WindowConfig)
 				local OptionHeight = DropdownConfig.OptionHeight
 				local HeaderHeight = DropdownConfig.HeaderHeight
 				local IconSize = DropdownConfig.IconSize
-				local SelectedRightPadding = 72
 				local HasSelectedIcon = DropdownConfig.SelectedIconProvider ~= nil
-				local SelectedIconOffset = HasSelectedIcon and (IconSize + 12) or 0
+				local SelectedLeftPadding = HasSelectedIcon and (IconSize + 20) or 12
 
 				if not table.find(Dropdown.Options, Dropdown.Value) then
 					Dropdown.Value = "..."
@@ -1358,8 +1357,8 @@ function OrionLib:MakeWindow(WindowConfig)
 						}), "Text"),
 						SetProps(MakeElement("Image", ""), {
 							Size = UDim2.new(0, IconSize, 0, IconSize),
-							AnchorPoint = Vector2.new(1, 0.5),
-							Position = UDim2.new(1, -42, 0.5, 0),
+							AnchorPoint = Vector2.new(0, 0.5),
+							Position = UDim2.new(0, 12, 0.5, 0),
 							Name = "SelectedIcon",
 							Visible = false
 						}),
@@ -1371,11 +1370,11 @@ function OrionLib:MakeWindow(WindowConfig)
 							Name = "Ico"
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Label", "Selected", DropdownConfig.SelectedTextSize), {
-							Size = UDim2.new(1, -(SelectedRightPadding + SelectedIconOffset), 1, 0),
+							Size = UDim2.new(1, -(SelectedLeftPadding + 40), 1, 0),
 							Font = Enum.Font.Gotham,
 							Name = "Selected",
 							TextXAlignment = Enum.TextXAlignment.Right,
-							Position = UDim2.new(0, 0, 0, 0)
+							Position = UDim2.new(0, SelectedLeftPadding, 0, 0)
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),

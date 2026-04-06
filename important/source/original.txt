@@ -1306,9 +1306,24 @@ function OrionLib:MakeWindow(WindowConfig)
 				DropdownConfig.Callback = DropdownConfig.Callback or function() end
 				DropdownConfig.Flag = DropdownConfig.Flag or nil
 				DropdownConfig.Save = DropdownConfig.Save or false
+				DropdownConfig.MaxVisibleOptions = DropdownConfig.MaxVisibleOptions or 5
+				DropdownConfig.OptionHeight = DropdownConfig.OptionHeight or 28
+				DropdownConfig.HeaderHeight = DropdownConfig.HeaderHeight or 38
+				DropdownConfig.OptionTextSize = DropdownConfig.OptionTextSize or 13
+				DropdownConfig.SelectedTextSize = DropdownConfig.SelectedTextSize or 13
+				DropdownConfig.IconSize = DropdownConfig.IconSize or 20
+				DropdownConfig.IconProvider = DropdownConfig.IconProvider or function() return nil end
+				DropdownConfig.SelectedIconProvider = DropdownConfig.SelectedIconProvider or DropdownConfig.IconProvider
 
 				local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
-				local MaxElements = 5
+				local MaxElements = DropdownConfig.MaxVisibleOptions
+				local OptionHeight = DropdownConfig.OptionHeight
+				local HeaderHeight = DropdownConfig.HeaderHeight
+				local IconSize = DropdownConfig.IconSize
+				local HeaderIconPadding = 12
+				local SelectedRightPadding = 40
+				local HasSelectedIcon = DropdownConfig.SelectedIconProvider ~= nil
+				local SelectedIconOffset = HasSelectedIcon and (IconSize + 8) or 0
 
 				if not table.find(Dropdown.Options, Dropdown.Value) then
 					Dropdown.Value = "..."
@@ -1320,8 +1335,8 @@ function OrionLib:MakeWindow(WindowConfig)
 					DropdownList
 				}), {
 					Parent = ItemParent,
-					Position = UDim2.new(0, 0, 0, 38),
-					Size = UDim2.new(1, 0, 1, -38),
+					Position = UDim2.new(0, 0, 0, HeaderHeight),
+					Size = UDim2.new(1, 0, 1, -HeaderHeight),
 					ClipsDescendants = true
 				}), "Divider")
 
@@ -1330,7 +1345,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				})
 
 				local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-					Size = UDim2.new(1, 0, 0, 38),
+					Size = UDim2.new(1, 0, 0, HeaderHeight),
 					Parent = ItemParent,
 					ClipsDescendants = true
 				}), {
@@ -1342,6 +1357,13 @@ function OrionLib:MakeWindow(WindowConfig)
 							Font = Enum.Font.GothamBold,
 							Name = "Content"
 						}), "Text"),
+						SetProps(MakeElement("Image", ""), {
+							Size = UDim2.new(0, IconSize, 0, IconSize),
+							AnchorPoint = Vector2.new(0, 0.5),
+							Position = UDim2.new(0.5, 0, 0.5, 0),
+							Name = "SelectedIcon",
+							Visible = false
+						}),
 						AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072706796"), {
 							Size = UDim2.new(0, 20, 0, 20),
 							AnchorPoint = Vector2.new(0, 0.5),
@@ -1349,11 +1371,12 @@ function OrionLib:MakeWindow(WindowConfig)
 							ImageColor3 = Color3.fromRGB(240, 240, 240),
 							Name = "Ico"
 						}), "TextDark"),
-						AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
-							Size = UDim2.new(1, -40, 1, 0),
+						AddThemeObject(SetProps(MakeElement("Label", "Selected", DropdownConfig.SelectedTextSize), {
+							Size = UDim2.new(1, -(SelectedRightPadding + SelectedIconOffset), 1, 0),
 							Font = Enum.Font.Gotham,
 							Name = "Selected",
-							TextXAlignment = Enum.TextXAlignment.Right
+							TextXAlignment = Enum.TextXAlignment.Right,
+							Position = UDim2.new(0, 0, 0, 0)
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),
@@ -1363,7 +1386,7 @@ function OrionLib:MakeWindow(WindowConfig)
 						}), "Stroke"), 
 						Click
 					}), {
-						Size = UDim2.new(1, 0, 0, 38),
+						Size = UDim2.new(1, 0, 0, HeaderHeight),
 						ClipsDescendants = true,
 						Name = "F"
 					}),
@@ -1375,18 +1398,40 @@ function OrionLib:MakeWindow(WindowConfig)
 					DropdownContainer.CanvasSize = UDim2.new(0, 0, 0, DropdownList.AbsoluteContentSize.Y)
 				end)  
 
+				local function UpdateSelectedIcon(Value)
+					local SelectedIcon = DropdownFrame.F.SelectedIcon
+					local SelectedImage = DropdownConfig.SelectedIconProvider and DropdownConfig.SelectedIconProvider(Value) or nil
+					if SelectedImage and SelectedImage ~= "" then
+						SelectedIcon.Image = SelectedImage
+						SelectedIcon.Visible = true
+						SelectedIcon.Position = UDim2.new(1, -(SelectedRightPadding + SelectedIconOffset), 0.5, 0)
+					else
+						SelectedIcon.Visible = false
+					end
+				end
+
 				local function AddOptions(Options)
 					for _, Option in pairs(Options) do
+						local OptionImage = DropdownConfig.IconProvider and DropdownConfig.IconProvider(Option) or nil
+						local HasOptionIcon = OptionImage and OptionImage ~= ""
+						local TextLeftPadding = HasOptionIcon and (8 + IconSize + 8) or 8
 						local OptionBtn = AddThemeObject(SetProps(SetChildren(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
 							MakeElement("Corner", 0, 6),
-							AddThemeObject(SetProps(MakeElement("Label", Option, 13, 0.4), {
-								Position = UDim2.new(0, 8, 0, 0),
-								Size = UDim2.new(1, -8, 1, 0),
+							SetProps(MakeElement("Image", HasOptionIcon and OptionImage or ""), {
+								Position = UDim2.new(0, 8, 0.5, 0),
+								AnchorPoint = Vector2.new(0, 0.5),
+								Size = UDim2.new(0, IconSize, 0, IconSize),
+								Name = "Icon",
+								Visible = HasOptionIcon
+							}),
+							AddThemeObject(SetProps(MakeElement("Label", Option, DropdownConfig.OptionTextSize, 0.4), {
+								Position = UDim2.new(0, TextLeftPadding, 0, 0),
+								Size = UDim2.new(1, -TextLeftPadding, 1, 0),
 								Name = "Title"
 							}), "Text")
 						}), {
 							Parent = DropdownContainer,
-							Size = UDim2.new(1, 0, 0, 28),
+							Size = UDim2.new(1, 0, 0, OptionHeight),
 							BackgroundTransparency = 1,
 							ClipsDescendants = true
 						}), "Divider")
@@ -1416,6 +1461,7 @@ function OrionLib:MakeWindow(WindowConfig)
 					if not table.find(Dropdown.Options, Value) then
 						Dropdown.Value = "..."
 						DropdownFrame.F.Selected.Text = Dropdown.Value
+						UpdateSelectedIcon(nil)
 						for _, v in pairs(Dropdown.Buttons) do
 							TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
 							TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
@@ -1425,6 +1471,7 @@ function OrionLib:MakeWindow(WindowConfig)
 
 					Dropdown.Value = Value
 					DropdownFrame.F.Selected.Text = Dropdown.Value
+					UpdateSelectedIcon(Dropdown.Value)
 
 					for _, v in pairs(Dropdown.Buttons) do
 						TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
@@ -1440,9 +1487,9 @@ function OrionLib:MakeWindow(WindowConfig)
 					DropdownFrame.F.Line.Visible = Dropdown.Toggled
 					TweenService:Create(DropdownFrame.F.Ico,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play()
 					if #Dropdown.Options > MaxElements then
-						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, 38 + (MaxElements * 28)) or UDim2.new(1, 0, 0, 38)}):Play()
+						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, HeaderHeight + (MaxElements * OptionHeight)) or UDim2.new(1, 0, 0, HeaderHeight)}):Play()
 					else
-						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + 38) or UDim2.new(1, 0, 0, 38)}):Play()
+						TweenService:Create(DropdownFrame,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = Dropdown.Toggled and UDim2.new(1, 0, 0, DropdownList.AbsoluteContentSize.Y + HeaderHeight) or UDim2.new(1, 0, 0, HeaderHeight)}):Play()
 					end
 				end)
 

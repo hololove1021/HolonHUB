@@ -562,20 +562,49 @@ function OrionLib:MakeWindow(WindowConfig)
 	MakeDraggable(MobileOpenButton, MobileOpenButton)
 
 
-	local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
-		Size = UDim2.new(1, 0, 1, -50)
-	}), {
-		MakeElement("List"),
-		MakeElement("Padding", 8, 0, 0, 8)
-	}), "Divider")
+		local TabHolder = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 4), {
+			Size = UDim2.new(1, 0, 1, -94),
+			Position = UDim2.new(0, 0, 0, 44)
+		}), {
+			MakeElement("List"),
+			MakeElement("Padding", 8, 0, 0, 8)
+		}), "Divider")
 
 	AddConnection(TabHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
 		TabHolder.CanvasSize = UDim2.new(0, 0, 0, TabHolder.UIListLayout.AbsoluteContentSize.Y + 16)
 	end)
 
-	local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
-		Size = UDim2.new(0.5, 0, 1, 0),
-		Position = UDim2.new(0.5, 0, 0, 0),
+		local TabSearchInput = AddThemeObject(Create("TextBox", {
+			Size = UDim2.new(1, -20, 0, 26),
+			Position = UDim2.new(0, 10, 0, 10),
+			BackgroundTransparency = 1,
+			ClearTextOnFocus = false,
+			PlaceholderText = "Tab Search",
+			Text = "",
+			TextSize = 14,
+			Font = Enum.Font.Gotham,
+			TextXAlignment = Enum.TextXAlignment.Left
+		}), "Text")
+
+		local TabSearchFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 6), {
+			Size = UDim2.new(1, -20, 0, 28),
+			Position = UDim2.new(0, 10, 0, 10)
+		}), {
+			SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
+				Size = UDim2.new(0, 14, 0, 14),
+				Position = UDim2.new(0, 8, 0.5, -7),
+				ImageTransparency = 0.35
+			}),
+			SetProps(TabSearchInput, {
+				Size = UDim2.new(1, -32, 1, 0),
+				Position = UDim2.new(0, 28, 0, 0)
+			}),
+			AddThemeObject(MakeElement("Stroke"), "Stroke")
+		}), "Main")
+
+		local CloseBtn = SetChildren(SetProps(MakeElement("Button"), {
+			Size = UDim2.new(0.5, 0, 1, 0),
+			Position = UDim2.new(0.5, 0, 0, 0),
 		BackgroundTransparency = 1
 	}), {
 		AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
@@ -611,13 +640,14 @@ function OrionLib:MakeWindow(WindowConfig)
 			Size = UDim2.new(0, 10, 1, 0),
 			Position = UDim2.new(1, -10, 0, 0)
 		}), "Second"), 
-		AddThemeObject(SetProps(MakeElement("Frame"), {
-			Size = UDim2.new(0, 1, 1, 0),
-			Position = UDim2.new(1, -1, 0, 0)
-		}), "Stroke"), 
-		TabHolder,
-		SetChildren(SetProps(MakeElement("TFrame"), {
-			Size = UDim2.new(1, 0, 0, 50),
+			AddThemeObject(SetProps(MakeElement("Frame"), {
+				Size = UDim2.new(0, 1, 1, 0),
+				Position = UDim2.new(1, -1, 0, 0)
+			}), "Stroke"), 
+			TabSearchFrame,
+			TabHolder,
+			SetChildren(SetProps(MakeElement("TFrame"), {
+				Size = UDim2.new(1, 0, 0, 50),
 			Position = UDim2.new(0, 0, 1, -50)
 		}), {
 			AddThemeObject(SetProps(MakeElement("Frame"), {
@@ -844,8 +874,18 @@ function OrionLib:MakeWindow(WindowConfig)
 		})
 	end
 
-	local TabFunction = {}
-	function TabFunction:MakeTab(TabConfig)
+		local TabFunction = {}
+		local RegisteredTabs = {}
+
+		local function ApplyTabSearch()
+			local query = string.lower(TabSearchInput.Text or "")
+			for _, Tab in ipairs(RegisteredTabs) do
+				Tab.Visible = (query == "" or string.find(string.lower(Tab.Name), query, 1, true) ~= nil)
+			end
+		end
+
+		AddConnection(TabSearchInput:GetPropertyChangedSignal("Text"), ApplyTabSearch)
+		function TabFunction:MakeTab(TabConfig)
 		TabConfig = TabConfig or {}
 		TabConfig.Name = TabConfig.Name or "Tab"
 		TabConfig.Icon = TabConfig.Icon or ""
@@ -871,9 +911,12 @@ function OrionLib:MakeWindow(WindowConfig)
 			}), "Text")
 		})
 
-		if GetIcon(TabConfig.Icon) ~= nil then
-			TabFrame.Ico.Image = GetIcon(TabConfig.Icon)
-		end	
+			if GetIcon(TabConfig.Icon) ~= nil then
+				TabFrame.Ico.Image = GetIcon(TabConfig.Icon)
+			end	
+
+			table.insert(RegisteredTabs, TabFrame)
+			ApplyTabSearch()
 
 		local Container = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
 			Size = UDim2.new(1, -150, 1, -50),
@@ -1321,7 +1364,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				local HeaderHeight = DropdownConfig.HeaderHeight
 				local IconSize = DropdownConfig.IconSize
 				local HasSelectedIcon = DropdownConfig.SelectedIconProvider ~= nil
-				local SelectedLeftPadding = HasSelectedIcon and (IconSize + 20) or 12
+				local SelectedLeftPadding = 12
 
 				if not table.find(Dropdown.Options, Dropdown.Value) then
 					Dropdown.Value = "..."
@@ -1370,11 +1413,11 @@ function OrionLib:MakeWindow(WindowConfig)
 							Name = "Ico"
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Label", "Selected", DropdownConfig.SelectedTextSize), {
-							Size = UDim2.new(1, -(SelectedLeftPadding + 40), 1, 0),
+							Size = UDim2.new(1, -52, 1, 0),
 							Font = Enum.Font.Gotham,
 							Name = "Selected",
 							TextXAlignment = Enum.TextXAlignment.Right,
-							Position = UDim2.new(0, SelectedLeftPadding, 0, 0)
+							Position = UDim2.new(0, 0, 0, 0)
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),
@@ -1402,6 +1445,8 @@ function OrionLib:MakeWindow(WindowConfig)
 					if SelectedImage and SelectedImage ~= "" then
 						SelectedIcon.Image = SelectedImage
 						SelectedIcon.Visible = true
+						local textWidth = DropdownFrame.F.Selected.TextBounds.X
+						SelectedIcon.Position = UDim2.new(1, -(52 + textWidth + IconSize + 8), 0.5, 0)
 					else
 						SelectedIcon.Visible = false
 					end

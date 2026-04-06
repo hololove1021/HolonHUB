@@ -1132,22 +1132,23 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 				return ParagraphFunction
 			end
-			function ElementFunction:AddButton(ButtonConfig)
-				ButtonConfig = ButtonConfig or {}
-				ButtonConfig.Name = ButtonConfig.Name or "Button"
-				ButtonConfig.Callback = ButtonConfig.Callback or function() end
-				ButtonConfig.Icon = ButtonConfig.Icon or "rbxassetid://3944703587"
+				function ElementFunction:AddButton(ButtonConfig)
+					ButtonConfig = ButtonConfig or {}
+					ButtonConfig.Name = ButtonConfig.Name or "Button"
+					ButtonConfig.Callback = ButtonConfig.Callback or function() end
+					ButtonConfig.Icon = ButtonConfig.Icon or "rbxassetid://3944703587"
+					ButtonConfig.Width = ButtonConfig.Width or 1
 
-				local Button = {}
+					local Button = {}
 
-				local Click = SetProps(MakeElement("Button"), {
-					Size = UDim2.new(1, 0, 1, 0)
-				})
+					local Click = SetProps(MakeElement("Button"), {
+						Size = UDim2.new(1, 0, 1, 0)
+					})
 
 					local ButtonFrame = SetSearchData(AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
-						Size = UDim2.new(1, 0, 0, 33),
+						Size = UDim2.new(ButtonConfig.Width, 0, 0, 33),
 						Parent = ItemParent
-				}), {
+					}), {
 					AddThemeObject(SetProps(MakeElement("Label", ButtonConfig.Name, 15), {
 						Size = UDim2.new(1, -12, 1, 0),
 						Position = UDim2.new(0, 12, 0, 0),
@@ -1729,15 +1730,16 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 				return Bind
 			end  
-			function ElementFunction:AddTextbox(TextboxConfig)
-				TextboxConfig = TextboxConfig or {}
-				TextboxConfig.Name = TextboxConfig.Name or "Textbox"
-				TextboxConfig.Default = TextboxConfig.Default or ""
-				TextboxConfig.TextDisappear = TextboxConfig.TextDisappear or false
-				TextboxConfig.Callback = TextboxConfig.Callback or function() end
+				function ElementFunction:AddTextbox(TextboxConfig)
+					TextboxConfig = TextboxConfig or {}
+					TextboxConfig.Name = TextboxConfig.Name or "Textbox"
+					TextboxConfig.Default = TextboxConfig.Default or ""
+					TextboxConfig.TextDisappear = TextboxConfig.TextDisappear or false
+					TextboxConfig.Callback = TextboxConfig.Callback or function() end
+					TextboxConfig.Width = TextboxConfig.Width or 1
 
-				local Click = SetProps(MakeElement("Button"), {
-					Size = UDim2.new(1, 0, 1, 0)
+					local Click = SetProps(MakeElement("Button"), {
+						Size = UDim2.new(1, 0, 1, 0)
 				})
 
 				local TextboxActual = AddThemeObject(Create("TextBox", {
@@ -1773,9 +1775,10 @@ function OrionLib:MakeWindow(WindowConfig)
 						Name = "Content"
 					}), "Text"),
 					AddThemeObject(MakeElement("Stroke"), "Stroke"),
-					TextContainer,
-					Click
-					}), "Second"), TextboxConfig.Name, "item")
+						TextContainer,
+						Click
+						}), "Second"), TextboxConfig.Name, "item")
+					TextboxFrame.Size = UDim2.new(TextboxConfig.Width, 0, 0, 38)
 
 				AddConnection(TextboxActual:GetPropertyChangedSignal("Text"), function()
 					--TextContainer.Size = UDim2.new(0, TextboxActual.TextBounds.X + 16, 0, 24)
@@ -1808,7 +1811,7 @@ function OrionLib:MakeWindow(WindowConfig)
 					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
 			end 
-			function ElementFunction:AddColorpicker(ColorpickerConfig)
+				function ElementFunction:AddColorpicker(ColorpickerConfig)
 				ColorpickerConfig = ColorpickerConfig or {}
 				ColorpickerConfig.Name = ColorpickerConfig.Name or "Colorpicker"
 				ColorpickerConfig.Default = ColorpickerConfig.Default or Color3.fromRGB(255,255,255)
@@ -2061,19 +2064,50 @@ function OrionLib:MakeWindow(WindowConfig)
 					ColorpickerConfig.Callback(Colorpicker.Value)
 				end
 
-				Colorpicker:Set(Colorpicker.Value)
-				if ColorpickerConfig.Flag then				
-					OrionLib.Flags[ColorpickerConfig.Flag] = Colorpicker
+					Colorpicker:Set(Colorpicker.Value)
+					if ColorpickerConfig.Flag then				
+						OrionLib.Flags[ColorpickerConfig.Flag] = Colorpicker
+					end
+					return Colorpicker
+				end  
+
+				function ElementFunction:AddHorizontalGroup(GroupConfig)
+					GroupConfig = GroupConfig or {}
+					GroupConfig.Height = GroupConfig.Height or 38
+					GroupConfig.Padding = GroupConfig.Padding or 6
+
+					local GroupFrame = SetSearchData(SetChildren(SetProps(MakeElement("TFrame"), {
+						Size = UDim2.new(1, 0, 0, GroupConfig.Height),
+						Parent = ItemParent
+					}), {
+						SetChildren(SetProps(MakeElement("TFrame"), {
+							Size = UDim2.new(1, 0, 1, 0),
+							BackgroundTransparency = 1,
+							Name = "Holder"
+						}), {
+							SetProps(Create("UIListLayout"), {
+								FillDirection = Enum.FillDirection.Horizontal,
+								VerticalAlignment = Enum.VerticalAlignment.Center,
+								SortOrder = Enum.SortOrder.LayoutOrder,
+								Padding = UDim.new(0, GroupConfig.Padding)
+							})
+						})
+					}), "", "section")
+
+					local GroupFunction = {}
+					for i, v in next, GetElements(GroupFrame.Holder) do
+						GroupFunction[i] = v
+					end
+					return GroupFunction
 				end
-				return Colorpicker
-			end  
-			return ElementFunction   
-		end	
+
+				return ElementFunction   
+			end	
 
 		local ElementFunction = {}
 
-		function ElementFunction:AddSection(SectionConfig)
-			SectionConfig.Name = SectionConfig.Name or "Section"
+			function ElementFunction:AddSection(SectionConfig)
+				SectionConfig.Name = SectionConfig.Name or "Section"
 
 				local SectionFrame = SetSearchData(SetChildren(SetProps(MakeElement("TFrame"), {
 					Size = UDim2.new(1, 0, 0, 26),
@@ -2099,12 +2133,42 @@ function OrionLib:MakeWindow(WindowConfig)
 				SectionFrame.Holder.Size = UDim2.new(1, 0, 0, SectionFrame.Holder.UIListLayout.AbsoluteContentSize.Y)
 			end)
 
-			local SectionFunction = {}
-			for i, v in next, GetElements(SectionFrame.Holder) do
-				SectionFunction[i] = v 
+				local SectionFunction = {}
+				for i, v in next, GetElements(SectionFrame.Holder) do
+					SectionFunction[i] = v 
+				end
+				return SectionFunction
+			end	
+
+			function ElementFunction:AddHorizontalGroup(GroupConfig)
+				GroupConfig = GroupConfig or {}
+				GroupConfig.Height = GroupConfig.Height or 38
+				GroupConfig.Padding = GroupConfig.Padding or 6
+
+				local GroupFrame = SetSearchData(SetChildren(SetProps(MakeElement("TFrame"), {
+					Size = UDim2.new(1, 0, 0, GroupConfig.Height),
+					Parent = Container
+				}), {
+					SetChildren(SetProps(MakeElement("TFrame"), {
+						Size = UDim2.new(1, 0, 1, 0),
+						BackgroundTransparency = 1,
+						Name = "Holder"
+					}), {
+						SetProps(Create("UIListLayout"), {
+							FillDirection = Enum.FillDirection.Horizontal,
+							VerticalAlignment = Enum.VerticalAlignment.Center,
+							SortOrder = Enum.SortOrder.LayoutOrder,
+							Padding = UDim.new(0, GroupConfig.Padding)
+						})
+					})
+				}), "", "section")
+
+				local GroupFunction = {}
+				for i, v in next, GetElements(GroupFrame.Holder) do
+					GroupFunction[i] = v
+				end
+				return GroupFunction
 			end
-			return SectionFunction
-		end	
 
 		for i, v in next, GetElements(Container) do
 			ElementFunction[i] = v 

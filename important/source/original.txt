@@ -844,7 +844,182 @@ function OrionLib:MakeWindow(WindowConfig)
 		})
 	end
 
+	local SearchRegistry = {}
+	local SearchResultButtons = {}
+	local SearchTabFrame = nil
+	local SearchContainer = nil
+	local SearchResultsHolder = nil
+	local SearchResultsLabel = nil
+	local SearchInput = nil
+
+	local function ActivateTab(TargetTabFrame, TargetContainer)
+		if not (TargetTabFrame and TargetContainer) then return end
+		for _, Tab in next, TabHolder:GetChildren() do
+			if Tab:IsA("TextButton") then
+				Tab.Title.Font = Enum.Font.GothamSemibold
+				TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.4}):Play()
+				TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0.4}):Play()
+			end
+		end
+		for _, ItemContainer in next, MainWindow:GetChildren() do
+			if ItemContainer.Name == "ItemContainer" then
+				ItemContainer.Visible = false
+			end
+		end
+		TweenService:Create(TargetTabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+		TweenService:Create(TargetTabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
+		TargetTabFrame.Title.Font = Enum.Font.GothamBlack
+		TargetContainer.Visible = true
+	end
+
+	local function RebuildSearchResults()
+		if not SearchResultsHolder or not SearchResultsLabel or not SearchInput then return end
+		for _, Button in ipairs(SearchResultButtons) do
+			Button:Destroy()
+		end
+		table.clear(SearchResultButtons)
+
+		local query = string.lower((SearchInput.Text or ""):gsub("^%s+", ""):gsub("%s+$", ""))
+		local matchCount = 0
+		for _, Entry in ipairs(SearchRegistry) do
+			local haystack = string.lower(Entry.TabName .. " " .. Entry.Name)
+			if query == "" or string.find(haystack, query, 1, true) then
+				matchCount = matchCount + 1
+				local ResultButton = AddThemeObject(SetChildren(SetProps(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
+					Parent = SearchResultsHolder,
+					Size = UDim2.new(1, 0, 0, 32),
+					BackgroundTransparency = 1
+				}), {
+					MakeElement("Corner", 0, 6),
+					AddThemeObject(SetProps(MakeElement("Label", Entry.TabName .. " / " .. Entry.Name, 13), {
+						Size = UDim2.new(1, -12, 1, 0),
+						Position = UDim2.new(0, 12, 0, 0),
+						Font = Enum.Font.GothamSemibold,
+						TextXAlignment = Enum.TextXAlignment.Left,
+						Name = "Title"
+					}), "Text")
+				}), "Divider")
+				AddConnection(ResultButton.MouseButton1Click, function()
+					ActivateTab(Entry.TabFrame, Entry.Container)
+					if Entry.Frame and Entry.Container then
+						task.defer(function()
+							pcall(function()
+								local y = Entry.Frame.AbsolutePosition.Y - Entry.Container.AbsolutePosition.Y + Entry.Container.CanvasPosition.Y - 10
+								Entry.Container.CanvasPosition = Vector2.new(0, math.max(0, y))
+							end)
+						end)
+					end
+				end)
+				table.insert(SearchResultButtons, ResultButton)
+			end
+		end
+		SearchResultsLabel.Text = query == "" and "検索ワードを入力してください" or ("検索結果: " .. tostring(matchCount) .. "件")
+	end
+
+	local function RegisterSearchEntry(TabName, Name, TabFrame, Container, Frame)
+		if not Name or Name == "" then return end
+		table.insert(SearchRegistry, {
+			TabName = TabName,
+			Name = Name,
+			TabFrame = TabFrame,
+			Container = Container,
+			Frame = Frame
+		})
+	end
+
 	local TabFunction = {}
+	do
+		SearchTabFrame = SetChildren(SetProps(MakeElement("Button"), {
+			Size = UDim2.new(1, 0, 0, 30),
+			Parent = TabHolder
+		}), {
+			AddThemeObject(SetProps(MakeElement("Image", "rbxassetid://3926305904"), {
+				AnchorPoint = Vector2.new(0, 0.5),
+				Size = UDim2.new(0, 18, 0, 18),
+				Position = UDim2.new(0, 10, 0.5, 0),
+				ImageTransparency = 0,
+				Name = "Ico"
+			}), "Text"),
+			AddThemeObject(SetProps(MakeElement("Label", "検索", 14), {
+				Size = UDim2.new(1, -35, 1, 0),
+				Position = UDim2.new(0, 35, 0, 0),
+				Font = Enum.Font.GothamBlack,
+				TextTransparency = 0,
+				Name = "Title"
+			}), "Text")
+		})
+
+		SearchContainer = AddThemeObject(SetChildren(SetProps(MakeElement("ScrollFrame", Color3.fromRGB(255, 255, 255), 5), {
+			Size = UDim2.new(1, -150, 1, -50),
+			Position = UDim2.new(0, 150, 0, 50),
+			Parent = MainWindow,
+			Visible = true,
+			Name = "ItemContainer"
+		}), {
+			MakeElement("List", 0, 6),
+			MakeElement("Padding", 15, 10, 10, 15)
+		}), "Divider")
+
+		AddConnection(SearchContainer.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+			SearchContainer.CanvasSize = UDim2.new(0, 0, 0, SearchContainer.UIListLayout.AbsoluteContentSize.Y + 30)
+		end)
+
+		local SearchBoxFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+			Size = UDim2.new(1, 0, 0, 38),
+			Parent = SearchContainer
+		}), {
+			AddThemeObject(SetProps(MakeElement("Label", "UI検索", 15), {
+				Size = UDim2.new(0, 90, 1, 0),
+				Position = UDim2.new(0, 12, 0, 0),
+				Font = Enum.Font.GothamBold,
+				Name = "Content"
+			}), "Text"),
+			AddThemeObject(MakeElement("Stroke"), "Stroke")
+		}), "Second")
+
+		SearchInput = AddThemeObject(Create("TextBox", {
+			Parent = SearchBoxFrame,
+			Size = UDim2.new(1, -120, 1, 0),
+			Position = UDim2.new(0, 105, 0, 0),
+			BackgroundTransparency = 1,
+			TextColor3 = Color3.fromRGB(255, 255, 255),
+			PlaceholderColor3 = Color3.fromRGB(170, 170, 170),
+			PlaceholderText = "項目名やタブ名で検索",
+			Font = Enum.Font.Gotham,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			TextSize = 13,
+			ClearTextOnFocus = false
+		}), "Text")
+
+		SearchResultsLabel = AddThemeObject(SetProps(MakeElement("Label", "検索ワードを入力してください", 13), {
+			Size = UDim2.new(1, 0, 0, 18),
+			Parent = SearchContainer,
+			TextXAlignment = Enum.TextXAlignment.Left,
+			Font = Enum.Font.GothamSemibold
+		}), "TextDark")
+
+		SearchResultsHolder = SetChildren(SetProps(MakeElement("TFrame"), {
+			Size = UDim2.new(1, 0, 0, 0),
+			Parent = SearchContainer,
+			Name = "SearchResultsHolder"
+		}), {
+			MakeElement("List", 0, 6)
+		})
+
+		AddConnection(SearchResultsHolder.UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"), function()
+			SearchResultsHolder.Size = UDim2.new(1, 0, 0, SearchResultsHolder.UIListLayout.AbsoluteContentSize.Y)
+		end)
+
+		AddConnection(SearchInput:GetPropertyChangedSignal("Text"), RebuildSearchResults)
+		AddConnection(SearchTabFrame.MouseButton1Click, function()
+			RebuildSearchResults()
+			ActivateTab(SearchTabFrame, SearchContainer)
+		end)
+		if FirstTab then
+			FirstTab = false
+			SearchContainer.Visible = true
+		end
+	end
 	function TabFunction:MakeTab(TabConfig)
 		TabConfig = TabConfig or {}
 		TabConfig.Name = TabConfig.Name or "Tab"
@@ -890,35 +1065,15 @@ function OrionLib:MakeWindow(WindowConfig)
 			Container.CanvasSize = UDim2.new(0, 0, 0, Container.UIListLayout.AbsoluteContentSize.Y + 30)
 		end)
 
-		if FirstTab then
-			FirstTab = false
-			TabFrame.Ico.ImageTransparency = 0
-			TabFrame.Title.TextTransparency = 0
-			TabFrame.Title.Font = Enum.Font.GothamBlack
-			Container.Visible = true
-		end    
-
 		AddConnection(TabFrame.MouseButton1Click, function()
-			for _, Tab in next, TabHolder:GetChildren() do
-				if Tab:IsA("TextButton") then
-					Tab.Title.Font = Enum.Font.GothamSemibold
-					TweenService:Create(Tab.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0.4}):Play()
-					TweenService:Create(Tab.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0.4}):Play()
-				end    
-			end
-			for _, ItemContainer in next, MainWindow:GetChildren() do
-				if ItemContainer.Name == "ItemContainer" then
-					ItemContainer.Visible = false
-				end    
-			end  
-			TweenService:Create(TabFrame.Ico, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
-			TweenService:Create(TabFrame.Title, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-			TabFrame.Title.Font = Enum.Font.GothamBlack
-			Container.Visible = true   
+			ActivateTab(TabFrame, Container)
 		end)
 
-		local function GetElements(ItemParent)
+			local function GetElements(ItemParent)
 			local ElementFunction = {}
+			local function RegisterElementForSearch(Name, Frame)
+				RegisterSearchEntry(TabConfig.Name, Name, TabFrame, Container, Frame)
+			end
 			function ElementFunction:AddLabel(Text)
 				local LabelFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
 					Size = UDim2.new(1, 0, 0, 30),
@@ -935,6 +1090,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				}), "Second")
 
 				local LabelFunction = {}
+				RegisterElementForSearch(Text, LabelFrame)
 				function LabelFunction:Set(ToChange)
 					LabelFrame.Content.Text = ToChange
 				end
@@ -973,6 +1129,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				ParagraphFrame.Content.Text = Content
 
 				local ParagraphFunction = {}
+				RegisterElementForSearch(Text, ParagraphFrame)
 				function ParagraphFunction:Set(ToChange)
 					ParagraphFrame.Content.Text = ToChange
 				end
@@ -1019,6 +1176,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				end)
 
 				local ParagraphFunction = {Instance = ParagraphFrame}
+				RegisterElementForSearch(Text, ParagraphFrame)
 				function ParagraphFunction:Set(ToChange)
 					ContentLabel.Text = ToChange
 				end
@@ -1076,6 +1234,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				function Button:Set(ButtonText)
 					ButtonFrame.Content.Text = ButtonText
 				end	
+				RegisterElementForSearch(ButtonConfig.Name, ButtonFrame)
 
 				return Button
 			end    
@@ -1159,6 +1318,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				if ToggleConfig.Flag then
 					OrionLib.Flags[ToggleConfig.Flag] = Toggle
 				end	
+				RegisterElementForSearch(ToggleConfig.Name, ToggleFrame)
 				return Toggle
 			end  
 			function ElementFunction:AddSlider(SliderConfig)
@@ -1296,6 +1456,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				if SliderConfig.Flag then				
 					OrionLib.Flags[SliderConfig.Flag] = Slider
 				end
+				RegisterElementForSearch(SliderConfig.Name, SliderFrame)
 				return Slider
 			end  
 			function ElementFunction:AddDropdown(DropdownConfig)
@@ -1308,7 +1469,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				DropdownConfig.Save = DropdownConfig.Save or false
 				DropdownConfig.Search = DropdownConfig.Search
 				if DropdownConfig.Search == nil then
-					DropdownConfig.Search = true
+					DropdownConfig.Search = false
 				end
 
 				local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
@@ -1580,6 +1741,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				if DropdownConfig.Flag then				
 					OrionLib.Flags[DropdownConfig.Flag] = Dropdown
 				end
+				RegisterElementForSearch(DropdownConfig.Name, DropdownFrame)
 				return Dropdown
 			end
 			function ElementFunction:AddBind(BindConfig)
@@ -1702,6 +1864,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				if BindConfig.Flag then				
 					OrionLib.Flags[BindConfig.Flag] = Bind
 				end
+				RegisterElementForSearch(BindConfig.Name, BindFrame)
 				return Bind
 			end  
 			function ElementFunction:AddTextbox(TextboxConfig)
@@ -1782,6 +1945,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				AddConnection(Click.MouseButton1Down, function()
 					TweenService:Create(TextboxFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {BackgroundColor3 = Color3.fromRGB(OrionLib.Themes[OrionLib.SelectedTheme].Second.R * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.G * 255 + 6, OrionLib.Themes[OrionLib.SelectedTheme].Second.B * 255 + 6)}):Play()
 				end)
+				RegisterElementForSearch(TextboxConfig.Name, TextboxFrame)
 			end 
 			function ElementFunction:AddColorpicker(ColorpickerConfig)
 				ColorpickerConfig = ColorpickerConfig or {}
@@ -2040,6 +2204,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				if ColorpickerConfig.Flag then				
 					OrionLib.Flags[ColorpickerConfig.Flag] = Colorpicker
 				end
+				RegisterElementForSearch(ColorpickerConfig.Name, ColorpickerFrame)
 				return Colorpicker
 			end  
 			return ElementFunction   
@@ -2075,6 +2240,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			end)
 
 			local SectionFunction = {}
+			RegisterSearchEntry(TabConfig.Name, SectionConfig.Name, TabFrame, Container, SectionFrame)
 			for i, v in next, GetElements(SectionFrame.Holder) do
 				SectionFunction[i] = v 
 			end

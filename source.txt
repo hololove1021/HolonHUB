@@ -1309,9 +1309,56 @@ function OrionLib:MakeWindow(WindowConfig)
 
 				local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
 				local MaxElements = 5
+				local DropdownFrame
 
-				if not table.find(Dropdown.Options, Dropdown.Value) then
-					Dropdown.Value = "..."
+				local function NormalizeOption(Option)
+					if type(Option) == "table" then
+						local Value = Option.Value
+						if Value == nil then
+							Value = Option.Text or Option.Name or ""
+						end
+						local Text = Option.Text or Option.Name or tostring(Value)
+						return {
+							Raw = Option,
+							Value = Value,
+							Text = Text,
+							Icon = Option.Icon or Option.Image,
+							Key = tostring(Value)
+						}
+					end
+					return {
+						Raw = Option,
+						Value = Option,
+						Text = tostring(Option),
+						Icon = nil,
+						Key = tostring(Option)
+					}
+				end
+
+				local function FindOption(Value)
+					for _, Option in pairs(Dropdown.Options) do
+						local Data = NormalizeOption(Option)
+						if Data.Value == Value or Data.Text == Value or Data.Raw == Value then
+							return Data
+						end
+					end
+				end
+
+				local function ApplySelectedVisual(OptionData)
+					if not OptionData then
+						DropdownFrame.F.Selected.Text = "..."
+						DropdownFrame.F.SelectedIcon.Visible = false
+						DropdownFrame.F.SelectedIcon.Image = ""
+						return
+					end
+					DropdownFrame.F.Selected.Text = OptionData.Text
+					if OptionData.Icon and OptionData.Icon ~= "" then
+						DropdownFrame.F.SelectedIcon.Image = OptionData.Icon
+						DropdownFrame.F.SelectedIcon.Visible = true
+					else
+						DropdownFrame.F.SelectedIcon.Visible = false
+						DropdownFrame.F.SelectedIcon.Image = ""
+					end
 				end
 
 				local DropdownList = MakeElement("List")
@@ -1329,7 +1376,7 @@ function OrionLib:MakeWindow(WindowConfig)
 					Size = UDim2.new(1, 0, 1, 0)
 				})
 
-				local DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
+				DropdownFrame = AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 5), {
 					Size = UDim2.new(1, 0, 0, 38),
 					Parent = ItemParent,
 					ClipsDescendants = true
@@ -1350,11 +1397,19 @@ function OrionLib:MakeWindow(WindowConfig)
 							Name = "Ico"
 						}), "TextDark"),
 						AddThemeObject(SetProps(MakeElement("Label", "Selected", 13), {
-							Size = UDim2.new(1, -40, 1, 0),
+							Size = UDim2.new(1, -72, 1, 0),
 							Font = Enum.Font.Gotham,
 							Name = "Selected",
 							TextXAlignment = Enum.TextXAlignment.Right
 						}), "TextDark"),
+						SetProps(MakeElement("Image"), {
+							Size = UDim2.new(0, 20, 0, 20),
+							AnchorPoint = Vector2.new(0, 0.5),
+							Position = UDim2.new(1, -56, 0.5, 0),
+							BackgroundTransparency = 1,
+							Name = "SelectedIcon",
+							Visible = false
+						}),
 						AddThemeObject(SetProps(MakeElement("Frame"), {
 							Size = UDim2.new(1, 0, 0, 1),
 							Position = UDim2.new(0, 0, 1, -1),
@@ -1377,11 +1432,21 @@ function OrionLib:MakeWindow(WindowConfig)
 
 				local function AddOptions(Options)
 					for _, Option in pairs(Options) do
+						local OptionData = NormalizeOption(Option)
 						local OptionBtn = AddThemeObject(SetProps(SetChildren(MakeElement("Button", Color3.fromRGB(40, 40, 40)), {
 							MakeElement("Corner", 0, 6),
-							AddThemeObject(SetProps(MakeElement("Label", Option, 13, 0.4), {
-								Position = UDim2.new(0, 8, 0, 0),
-								Size = UDim2.new(1, -8, 1, 0),
+							SetProps(MakeElement("Image"), {
+								Position = UDim2.new(0, 8, 0.5, 0),
+								AnchorPoint = Vector2.new(0, 0.5),
+								Size = UDim2.new(0, 18, 0, 18),
+								BackgroundTransparency = 1,
+								Name = "Icon",
+								Image = OptionData.Icon or "",
+								Visible = OptionData.Icon ~= nil and OptionData.Icon ~= ""
+							}),
+							AddThemeObject(SetProps(MakeElement("Label", "", 13, 0.4), {
+								Position = UDim2.new(0, OptionData.Icon and 32 or 8, 0, 0),
+								Size = UDim2.new(1, -(OptionData.Icon and 32 or 8), 1, 0),
 								Name = "Title"
 							}), "Text")
 						}), {
@@ -1390,32 +1455,39 @@ function OrionLib:MakeWindow(WindowConfig)
 							BackgroundTransparency = 1,
 							ClipsDescendants = true
 						}), "Divider")
+						OptionBtn.Title.Text = OptionData.Text
 
 						AddConnection(OptionBtn.MouseButton1Click, function()
-							Dropdown:Set(Option)
+							Dropdown:Set(OptionData.Value)
 							SaveCfg(game.GameId)
 						end)
 
-						Dropdown.Buttons[Option] = OptionBtn
+						Dropdown.Buttons[OptionData.Key] = OptionBtn
 					end
 				end	
 
 				function Dropdown:Refresh(Options, Delete)
+					for _,v in pairs(Dropdown.Buttons) do
+						v:Destroy()
+					end
+					table.clear(Dropdown.Buttons)
 					if Delete then
-						for _,v in pairs(Dropdown.Buttons) do
-							v:Destroy()
-						end    
 						table.clear(Dropdown.Options)
-						table.clear(Dropdown.Buttons)
 					end
 					Dropdown.Options = Options
 					AddOptions(Dropdown.Options)
+					if FindOption(Dropdown.Value) then
+						ApplySelectedVisual(FindOption(Dropdown.Value))
+					else
+						ApplySelectedVisual(nil)
+					end
 				end  
 
 				function Dropdown:Set(Value)
-					if not table.find(Dropdown.Options, Value) then
+					local Selected = FindOption(Value)
+					if not Selected then
 						Dropdown.Value = "..."
-						DropdownFrame.F.Selected.Text = Dropdown.Value
+						ApplySelectedVisual(nil)
 						for _, v in pairs(Dropdown.Buttons) do
 							TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
 							TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
@@ -1423,15 +1495,17 @@ function OrionLib:MakeWindow(WindowConfig)
 						return
 					end
 
-					Dropdown.Value = Value
-					DropdownFrame.F.Selected.Text = Dropdown.Value
+					Dropdown.Value = Selected.Value
+					ApplySelectedVisual(Selected)
 
 					for _, v in pairs(Dropdown.Buttons) do
 						TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
 						TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
 					end	
-					TweenService:Create(Dropdown.Buttons[Value],TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
-					TweenService:Create(Dropdown.Buttons[Value].Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play()
+					if Dropdown.Buttons[Selected.Key] then
+						TweenService:Create(Dropdown.Buttons[Selected.Key],TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
+						TweenService:Create(Dropdown.Buttons[Selected.Key].Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play()
+					end
 					return DropdownConfig.Callback(Dropdown.Value)
 				end
 

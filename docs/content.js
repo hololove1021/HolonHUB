@@ -10,7 +10,7 @@ window.HOLON_SITE_DATA = {
         notesFolder: "FTAP_Notes/*.json",
         links: {
             discord: "https://discord.gg/EHBXqgZZYN",
-            tiktok: "https://www.tiktok.com/@holon_calm",
+            tiktok: "https://www.tiktok.com/@holoncalm",
             youtube: "https://www.youtube.com/@Holoncalm"
         },
         sourceFiles: [
@@ -66,6 +66,7 @@ window.HOLON_SITE_DATA = {
                 overview: "Overview",
                 systems: "Systems",
                 interface: "Interface",
+                converter: "Converter",
                 languages: "Languages"
             },
             hero: {
@@ -148,6 +149,29 @@ window.HOLON_SITE_DATA = {
                 body: "Each card below maps to a real `hub-*.lua` variant. Pick one to switch the page copy and tab preview.",
                 switchLabel: "Use this locale"
             },
+            converter: {
+                kicker: "MIDI to JSON",
+                title: "Browser converter from the Python workflow",
+                body: "Upload a MIDI file and convert it into the same Holon HUB piano JSON shape used by the Python script: chord reduction plus minimum-interval filtering.",
+                fileLabel: "MIDI file",
+                intervalLabel: "Minimum interval (seconds)",
+                modeLabel: "Chord mode",
+                convert: "Convert MIDI",
+                download: "Download JSON",
+                hint: "Supported mapping range: C4 to A#5. Notes outside the mapped keyboard layout are ignored.",
+                stats: {
+                    file: "File",
+                    detected: "Detected notes",
+                    reduced: "After chord reduce",
+                    filtered: "After interval filter",
+                    duration: "Total duration",
+                    output: "Output notes"
+                },
+                empty: "Converted JSON will appear here.",
+                selectFile: "Select a MIDI file first.",
+                invalidMidi: "The selected file could not be parsed as a standard MIDI file.",
+                downloadName: "holon-midi.json"
+            },
             footer: "Holon HUB v1.5.5 overview organized from hub-*.lua and orion.lua."
         },
         ja: {
@@ -162,6 +186,7 @@ window.HOLON_SITE_DATA = {
                 overview: "概要",
                 systems: "機能",
                 interface: "タブ構成",
+                converter: "変換",
                 languages: "言語"
             },
             hero: {
@@ -243,6 +268,29 @@ window.HOLON_SITE_DATA = {
                 title: "10 言語ビルド",
                 body: "各カードは実在する `hub-*.lua` ビルドに対応しています。選ぶとサイト文言とタブ表示が切り替わります。",
                 switchLabel: "この言語に切替"
+            },
+            converter: {
+                kicker: "MIDI → JSON",
+                title: "Python 版の流れをブラウザで実行",
+                body: "MIDI ファイルをアップロードすると、Python スクリプトと同じ Holon HUB ピアノ用 JSON 形式へ変換します。和音の整理と最小間隔フィルタにも対応しています。",
+                fileLabel: "MIDI ファイル",
+                intervalLabel: "最小間隔（秒）",
+                modeLabel: "和音モード",
+                convert: "MIDI を変換",
+                download: "JSON を保存",
+                hint: "対応マッピング範囲は C4 から A#5 です。対象外の音は無視されます。",
+                stats: {
+                    file: "ファイル",
+                    detected: "検出ノート数",
+                    reduced: "和音整理後",
+                    filtered: "間隔フィルタ後",
+                    duration: "総演奏時間",
+                    output: "出力ノート数"
+                },
+                empty: "変換された JSON がここに表示されます。",
+                selectFile: "先に MIDI ファイルを選択してください。",
+                invalidMidi: "選択したファイルは標準 MIDI として解析できませんでした。",
+                downloadName: "holon-midi.json"
             },
             footer: "Holon HUB v1.5.5 を `hub-*.lua` と `orion.lua` から整理した概要サイト。"
         },

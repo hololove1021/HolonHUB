@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HolonHUB | The Nexus of Autonomy</title>
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg: #0a0a0c;
+            --text: #ffffff;
+            --gray: #888;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 100;
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: #16161a;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            transition: border-color 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+        }
+
+        .feature-card h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px;
+            border-top: 1px solid #222;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">HolonHUB</div>
+        <nav>
+            <a href="#" style="color: white; text-decoration: none; margin-left: 20px;">Vision</a>
+            <a href="#" style="color: white; text-decoration: none; margin-left: 20px;">Docs</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Connecting<br><span style="color: var(--primary);">the Wholes.</span></h1>
+        <p>HolonHUBは、個の自律性を損なうことなく、全体としての調和を実現する次世代の統合プラットフォームです。</p>
+        <a href="#" class="cta-button">エコシステムに参加する</a>
+    </section>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>Autonomy</h3>
+            <p>各ノードは完全に独立しており、独自のルールとガバナンスを維持したままネットワークに参加可能です。</p>
+        </div>
+        <div class="feature-card">
+            <h3>Integration</h3>
+            <p>異なるプロトコルやデータ形式をシームレスに接続。分断された情報を一つの知性に変えます。</p>
+        </div>
+        <div class="feature-card">
+            <h3>Scalability</h3>
+            <p>ホロン構造を採用することで、規模が拡大してもシステム全体の負荷を分散し、無限の拡張性を提供します。</p>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 HolonHUB Foundation. All rights reserved.
+    </footer>
+
+</body>
+</html>

@@ -590,7 +590,7 @@ function OrionLib:MakeWindow(WindowConfig)
 			Size = UDim2.new(1, -20, 0, 28),
 			Position = UDim2.new(0, 10, 0, 10)
 		}), {
-			SetProps(MakeElement("Image", "rbxassetid://7072725342"), {
+			SetProps(MakeElement("Image", "rbxassetid://121018724060431"), {
 				Size = UDim2.new(0, 14, 0, 14),
 				Position = UDim2.new(0, 8, 0.5, -7),
 				ImageTransparency = 0.35

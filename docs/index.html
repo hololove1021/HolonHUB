@@ -2,230 +2,131 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HolonHUB | The Nexus of Autonomy</title>
-    <style>
-        :root {
-            --primary: #00f2ff;
-            --secondary: #7000ff;
-            --bg: #0a0a0c;
-            --text: #ffffff;
-            --gray: #888;
-            --discord: #5865F2;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Language Switching Logic */
-        [lang="en"] .lang-ja,
-        [lang="ja"] .lang-en {
-            display: none;
-        }
-
-        /* Header */
-        header {
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 100;
-            background: rgba(10, 10, 12, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        nav a:hover {
-            color: var(--primary);
-        }
-
-        .lang-switch {
-            background: transparent;
-            border: 1px solid var(--gray);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
-            padding: 0 20px;
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
-            margin-bottom: 1rem;
-            line-height: 1.1;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--gray);
-            max-width: 700px;
-            margin-bottom: 2.5rem;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 20px;
-        }
-
-        .cta-button {
-            padding: 1rem 2.5rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border: none;
-            color: white;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s;
-            text-decoration: none;
-        }
-
-        .discord-button {
-            background: var(--discord);
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 100px 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: #16161a;
-            padding: 40px;
-            border-radius: 20px;
-            border: 1px solid #333;
-            transition: 0.3s;
-        }
-
-        .feature-card:hover {
-            border-color: var(--primary);
-            background: #1c1c22;
-        }
-
-        .feature-card h3 {
-            color: var(--primary);
-            margin-top: 0;
-            font-size: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 50px;
-            border-top: 1px solid #222;
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-    </style>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Holon HUB v1.5.5 multilingual overview built from hub-*.lua and orion.lua.">
+    <meta name="theme-color" content="#08111c">
+    <title>Holon HUB | Multilingual Build Overview</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body lang="ja"> <header>
-        <div class="logo">HolonHUB</div>
-        <nav>
-            <a href="https://discord.gg/EHBXqgZZYN" target="_blank">Discord</a>
-            <a href="#" class="lang-ja">ビジョン</a>
-            <a href="#" class="lang-en">Vision</a>
-            <button class="lang-switch" onclick="toggleLanguage()">EN / JA</button>
-        </nav>
-    </header>
+<body>
+    <div class="site-shell">
+        <div class="bg-orb orb-one" aria-hidden="true"></div>
+        <div class="bg-orb orb-two" aria-hidden="true"></div>
+        <div class="bg-grid" aria-hidden="true"></div>
 
-    <section class="hero">
-        <h1>Connecting<br><span style="color: var(--primary);">the Wholes.</span></h1>
-        
-        <p class="lang-ja">HolonHUBは、個の自律性を損なうことなく、全体としての調和を実現する次世代の統合プラットフォームです。独立したノードが共鳴し、新たな知性を形成します。</p>
-        <p class="lang-en">HolonHUB is a next-generation integration platform that achieves harmony as a whole without sacrificing individual autonomy. Independent nodes resonate to form a new intelligence.</p>
-        
-        <div class="cta-group">
-            <a href="https://discord.gg/EHBXqgZZYN" target="_blank" class="cta-button discord-button">
-                <span class="lang-ja">Discordに参加する</span>
-                <span class="lang-en">Join Discord</span>
+        <header class="site-header">
+            <a class="brand" href="#top" aria-label="Holon HUB home">
+                <span class="brand-meta">Prometheus / FTAP</span>
+                <span class="brand-line">
+                    <span class="brand-name">Holon HUB</span>
+                    <span class="brand-version" id="brand-version"></span>
+                </span>
             </a>
-        </div>
-    </section>
 
-    <section class="features">
-        <div class="feature-card">
-            <h3>Autonomy</h3>
-            <p class="lang-ja">各ノードは完全に独立しており、独自のルールとガバナンスを維持したままネットワークに参加可能です。</p>
-            <p class="lang-en">Each node is completely independent, allowing participation in the network while maintaining its own rules and governance.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Integration</h3>
-            <p class="lang-ja">異なるプロトコルやデータ形式をシームレスに接続。分断された情報を一つの知性に変えます。</p>
-            <p class="lang-en">Seamlessly connect different protocols and data formats. Transform fragmented information into a single intelligence.</p>
-        </div>
-        <div class="feature-card">
-            <h3>Scalability</h3>
-            <p class="lang-ja">ホロン構造を採用することで、規模が拡大してもシステム全体の負荷を分散し、無限の拡張性を提供します。</p>
-            <p class="lang-en">By adopting a holonic structure, the system distributes the load even as it scales, providing infinite extensibility.</p>
-        </div>
-    </section>
+            <nav class="main-nav" aria-label="Primary">
+                <a href="#overview" data-nav="overview"></a>
+                <a href="#systems" data-nav="systems"></a>
+                <a href="#interface" data-nav="interface"></a>
+                <a href="#languages" data-nav="languages"></a>
+            </nav>
 
-    <footer>
-        &copy; 2026 HolonHUB Foundation. All rights reserved.
-    </footer>
+            <label class="locale-control" for="locale-select">
+                <span class="locale-label" id="locale-label"></span>
+                <select id="locale-select" aria-label="Language"></select>
+            </label>
+        </header>
 
-    <script>
-        function toggleLanguage() {
-            const body = document.body;
-            if (body.getAttribute('lang') === 'ja') {
-                body.setAttribute('lang', 'en');
-            } else {
-                body.setAttribute('lang', 'ja');
-            }
-        }
-    </script>
+        <main id="top">
+            <section class="hero reveal">
+                <div class="hero-copy">
+                    <p class="eyebrow" id="hero-eyebrow"></p>
+                    <h1 class="hero-title">
+                        <span class="hero-title-main">Holon HUB</span>
+                        <span class="hero-title-sub" id="hero-subtitle"></span>
+                    </h1>
+                    <p class="hero-lead" id="hero-lead"></p>
 
+                    <div class="cta-row">
+                        <a class="button button-primary" id="cta-discord" target="_blank" rel="noreferrer"></a>
+                        <a class="button button-secondary" id="cta-tiktok" target="_blank" rel="noreferrer"></a>
+                        <a class="button button-secondary" id="cta-youtube" target="_blank" rel="noreferrer"></a>
+                    </div>
+
+                    <div class="stats-grid" id="stats-grid"></div>
+                </div>
+
+                <aside class="hero-panel glass-card">
+                    <div class="panel-top">
+                        <p class="panel-kicker" id="snapshot-kicker"></p>
+                        <h2 class="panel-title" id="snapshot-title"></h2>
+                    </div>
+                    <p class="panel-body" id="snapshot-body"></p>
+                    <dl class="snapshot-list" id="snapshot-list"></dl>
+                    <div class="pill-row" id="source-pills"></div>
+                </aside>
+            </section>
+
+            <section id="overview" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="overview-kicker"></p>
+                    <h2 class="section-title" id="overview-title"></h2>
+                </div>
+
+                <div class="overview-layout">
+                    <article class="glass-card narrative-card">
+                        <p id="overview-body"></p>
+                    </article>
+
+                    <aside class="glass-card detail-card">
+                        <dl class="detail-list" id="detail-list"></dl>
+                    </aside>
+                </div>
+            </section>
+
+            <section id="systems" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="systems-kicker"></p>
+                    <h2 class="section-title" id="systems-title"></h2>
+                    <p class="section-body" id="systems-body"></p>
+                </div>
+
+                <div class="systems-grid" id="systems-grid"></div>
+            </section>
+
+            <section id="interface" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="interface-kicker"></p>
+                    <h2 class="section-title" id="interface-title"></h2>
+                    <p class="section-body" id="interface-body"></p>
+                </div>
+
+                <div class="interface-shell glass-card">
+                    <div class="interface-meta">
+                        <span class="interface-badge" id="interface-badge"></span>
+                        <span class="interface-source" id="interface-source"></span>
+                    </div>
+                    <div class="tab-grid" id="tab-grid"></div>
+                </div>
+            </section>
+
+            <section id="languages" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="languages-kicker"></p>
+                    <h2 class="section-title" id="languages-title"></h2>
+                    <p class="section-body" id="languages-body"></p>
+                </div>
+
+                <div class="locale-grid" id="locale-grid"></div>
+            </section>
+        </main>
+
+        <footer class="site-footer">
+            <p id="footer-copy"></p>
+        </footer>
+    </div>
+
+    <script src="content.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>

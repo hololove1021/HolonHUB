@@ -12,6 +12,7 @@
             --bg: #0a0a0c;
             --text: #ffffff;
             --gray: #888;
+            --discord: #5865F2;
         }
 
         body {
@@ -23,9 +24,15 @@
             overflow-x: hidden;
         }
 
+        /* Language Switching Logic */
+        [lang="en"] .lang-ja,
+        [lang="ja"] .lang-en {
+            display: none;
+        }
+
         /* Header */
         header {
-            padding: 2rem;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,6 +53,33 @@
             -webkit-text-fill-color: transparent;
         }
 
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .lang-switch {
+            background: transparent;
+            border: 1px solid var(--gray);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
         /* Hero Section */
         .hero {
             height: 100vh;
@@ -55,6 +89,7 @@
             align-items: center;
             text-align: center;
             background: radial-gradient(circle at center, #1a1a2e 0%, #0a0a0c 100%);
+            padding: 0 20px;
         }
 
         .hero h1 {
@@ -66,8 +101,13 @@
         .hero p {
             font-size: 1.2rem;
             color: var(--gray);
-            max-width: 600px;
-            margin-bottom: 2rem;
+            max-width: 700px;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
         }
 
         .cta-button {
@@ -78,8 +118,12 @@
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s;
             text-decoration: none;
+        }
+
+        .discord-button {
+            background: var(--discord);
         }
 
         .cta-button:hover {
@@ -102,16 +146,18 @@
             padding: 40px;
             border-radius: 20px;
             border: 1px solid #333;
-            transition: border-color 0.3s;
+            transition: 0.3s;
         }
 
         .feature-card:hover {
             border-color: var(--primary);
+            background: #1c1c22;
         }
 
         .feature-card h3 {
             color: var(--primary);
             margin-top: 0;
+            font-size: 1.5rem;
         }
 
         /* Footer */
@@ -124,40 +170,62 @@
         }
     </style>
 </head>
-<body>
-
-    <header>
+<body lang="ja"> <header>
         <div class="logo">HolonHUB</div>
         <nav>
-            <a href="#" style="color: white; text-decoration: none; margin-left: 20px;">Vision</a>
-            <a href="#" style="color: white; text-decoration: none; margin-left: 20px;">Docs</a>
+            <a href="https://discord.gg/EHBXqgZZYN" target="_blank">Discord</a>
+            <a href="#" class="lang-ja">ビジョン</a>
+            <a href="#" class="lang-en">Vision</a>
+            <button class="lang-switch" onclick="toggleLanguage()">EN / JA</button>
         </nav>
     </header>
 
     <section class="hero">
         <h1>Connecting<br><span style="color: var(--primary);">the Wholes.</span></h1>
-        <p>HolonHUBは、個の自律性を損なうことなく、全体としての調和を実現する次世代の統合プラットフォームです。</p>
-        <a href="#" class="cta-button">エコシステムに参加する</a>
+        
+        <p class="lang-ja">HolonHUBは、個の自律性を損なうことなく、全体としての調和を実現する次世代の統合プラットフォームです。独立したノードが共鳴し、新たな知性を形成します。</p>
+        <p class="lang-en">HolonHUB is a next-generation integration platform that achieves harmony as a whole without sacrificing individual autonomy. Independent nodes resonate to form a new intelligence.</p>
+        
+        <div class="cta-group">
+            <a href="https://discord.gg/EHBXqgZZYN" target="_blank" class="cta-button discord-button">
+                <span class="lang-ja">Discordに参加する</span>
+                <span class="lang-en">Join Discord</span>
+            </a>
+        </div>
     </section>
 
     <section class="features">
         <div class="feature-card">
             <h3>Autonomy</h3>
-            <p>各ノードは完全に独立しており、独自のルールとガバナンスを維持したままネットワークに参加可能です。</p>
+            <p class="lang-ja">各ノードは完全に独立しており、独自のルールとガバナンスを維持したままネットワークに参加可能です。</p>
+            <p class="lang-en">Each node is completely independent, allowing participation in the network while maintaining its own rules and governance.</p>
         </div>
         <div class="feature-card">
             <h3>Integration</h3>
-            <p>異なるプロトコルやデータ形式をシームレスに接続。分断された情報を一つの知性に変えます。</p>
+            <p class="lang-ja">異なるプロトコルやデータ形式をシームレスに接続。分断された情報を一つの知性に変えます。</p>
+            <p class="lang-en">Seamlessly connect different protocols and data formats. Transform fragmented information into a single intelligence.</p>
         </div>
         <div class="feature-card">
             <h3>Scalability</h3>
-            <p>ホロン構造を採用することで、規模が拡大してもシステム全体の負荷を分散し、無限の拡張性を提供します。</p>
+            <p class="lang-ja">ホロン構造を採用することで、規模が拡大してもシステム全体の負荷を分散し、無限の拡張性を提供します。</p>
+            <p class="lang-en">By adopting a holonic structure, the system distributes the load even as it scales, providing infinite extensibility.</p>
         </div>
     </section>
 
     <footer>
         &copy; 2026 HolonHUB Foundation. All rights reserved.
     </footer>
+
+    <script>
+        function toggleLanguage() {
+            const body = document.body;
+            if (body.getAttribute('lang') === 'ja') {
+                body.setAttribute('lang', 'en');
+            } else {
+                body.setAttribute('lang', 'ja');
+            }
+        }
+    </script>
 
 </body>
 </html>

@@ -688,12 +688,21 @@ function OrionLib:MakeWindow(WindowConfig)
 		}),
 	}), "Second")
 
-	local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
-		Size = UDim2.new(1, -30, 2, 0),
-		Position = UDim2.new(0, 25, 0, -24),
-		Font = Enum.Font.GothamBlack,
-		TextSize = 20
-	}), "Text")
+		local WindowName = AddThemeObject(SetProps(MakeElement("Label", WindowConfig.Name, 14), {
+			Size = UDim2.new(1, -30, 2, 0),
+			Position = UDim2.new(0, 25, 0, -24),
+			Font = Enum.Font.GothamBlack,
+			TextSize = 20
+		}), "Text")
+
+		local WindowStatus = AddThemeObject(SetProps(MakeElement("Label", "", 13), {
+			Size = UDim2.new(0, 120, 0, 20),
+			Position = UDim2.new(1, -170, 0, 15),
+			Font = Enum.Font.GothamBold,
+			TextXAlignment = Enum.TextXAlignment.Right,
+			Visible = false,
+			Name = "WindowStatus"
+		}), "TextDark")
 
 	local WindowTopBarLine = AddThemeObject(SetProps(MakeElement("Frame"), {
 		Size = UDim2.new(1, 0, 0, 1),
@@ -713,12 +722,13 @@ function OrionLib:MakeWindow(WindowConfig)
 		--	ImageColor3 = Color3.fromRGB(33, 33, 33),
 		--	ImageTransparency = 0.7
 		--}),
-		SetChildren(SetProps(MakeElement("TFrame"), {
-			Size = UDim2.new(1, 0, 0, 50),
-			Name = "TopBar"
-		}), {
-			WindowName,
-			WindowTopBarLine,
+			SetChildren(SetProps(MakeElement("TFrame"), {
+				Size = UDim2.new(1, 0, 0, 50),
+				Name = "TopBar"
+			}), {
+				WindowName,
+				WindowStatus,
+				WindowTopBarLine,
 			AddThemeObject(SetChildren(SetProps(MakeElement("RoundFrame", Color3.fromRGB(255, 255, 255), 0, 7), {
 				Size = UDim2.new(0, 70, 0, 30),
 				Position = UDim2.new(1, -90, 0, 10)
@@ -2283,3 +2293,13 @@ end
 OrionLib.SetTheme = SetTheme
 
 return OrionLib
+		function TabFunction:SetTitleStatus(Text, Color)
+			local content = tostring(Text or "")
+			WindowStatus.Text = content
+			WindowStatus.Visible = content ~= ""
+			if Color then
+				WindowStatus.TextColor3 = Color
+			else
+				WindowStatus.TextColor3 = OrionLib.Themes[OrionLib.SelectedTheme].TextDark
+			end
+		end

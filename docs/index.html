@@ -28,6 +28,7 @@
                 <a href="#overview" data-nav="overview"></a>
                 <a href="#systems" data-nav="systems"></a>
                 <a href="#interface" data-nav="interface"></a>
+                <a href="#converter" data-nav="converter"></a>
                 <a href="#languages" data-nav="languages"></a>
             </nav>
 
@@ -107,6 +108,50 @@
                         <span class="interface-source" id="interface-source"></span>
                     </div>
                     <div class="tab-grid" id="tab-grid"></div>
+                </div>
+            </section>
+
+            <section id="converter" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="converter-kicker"></p>
+                    <h2 class="section-title" id="converter-title"></h2>
+                    <p class="section-body" id="converter-body"></p>
+                </div>
+
+                <div class="converter-layout">
+                    <article class="glass-card converter-card">
+                        <div class="converter-form-grid">
+                            <label class="field">
+                                <span class="field-label" id="converter-file-label"></span>
+                                <input id="midi-file" type="file" accept=".mid,.midi,audio/midi,audio/x-midi">
+                            </label>
+
+                            <label class="field">
+                                <span class="field-label" id="converter-interval-label"></span>
+                                <input id="min-interval" type="number" min="0" max="5" step="0.01" value="0.05">
+                            </label>
+
+                            <label class="field">
+                                <span class="field-label" id="converter-mode-label"></span>
+                                <select id="chord-mode">
+                                    <option value="highest">highest</option>
+                                    <option value="lowest">lowest</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="cta-row converter-actions">
+                            <button class="button button-primary" id="convert-midi" type="button"></button>
+                            <button class="button button-secondary" id="download-json" type="button" disabled></button>
+                        </div>
+
+                        <p class="converter-hint" id="converter-hint"></p>
+                    </article>
+
+                    <aside class="glass-card converter-card">
+                        <dl class="snapshot-list" id="converter-stats"></dl>
+                        <pre class="converter-output" id="converter-output"></pre>
+                    </aside>
                 </div>
             </section>
 

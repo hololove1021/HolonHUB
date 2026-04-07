@@ -2293,13 +2293,3 @@ end
 OrionLib.SetTheme = SetTheme
 
 return OrionLib
-		function TabFunction:SetTitleStatus(Text, Color)
-			local content = tostring(Text or "")
-			WindowStatus.Text = content
-			WindowStatus.Visible = content ~= ""
-			if Color then
-				WindowStatus.TextColor3 = Color
-			else
-				WindowStatus.TextColor3 = OrionLib.Themes[OrionLib.SelectedTheme].TextDark
-			end
-		end

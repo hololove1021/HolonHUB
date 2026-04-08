@@ -25,7 +25,12 @@
             </a>
 
             <nav class="main-nav" aria-label="Primary">
+                <a href="#portal" data-nav="portal"></a>
                 <a href="#overview" data-nav="overview"></a>
+                <a href="#guide" data-nav="guide"></a>
+                <a href="#tutorials" data-nav="tutorials"></a>
+                <a href="#piano-guide" data-nav="pianoGuide"></a>
+                <a href="#access" data-nav="access"></a>
                 <a href="#systems" data-nav="systems"></a>
                 <a href="#interface" data-nav="interface"></a>
                 <a href="#converter" data-nav="converter"></a>
@@ -68,6 +73,10 @@
                 </aside>
             </section>
 
+            <section id="portal" class="section reveal">
+                <div class="portal-grid" id="portal-grid"></div>
+            </section>
+
             <section id="overview" class="section reveal">
                 <div class="section-head">
                     <p class="section-kicker" id="overview-kicker"></p>
@@ -82,6 +91,86 @@
                     <aside class="glass-card detail-card">
                         <dl class="detail-list" id="detail-list"></dl>
                     </aside>
+                </div>
+            </section>
+
+            <section id="guide" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="guide-kicker"></p>
+                    <h2 class="section-title" id="guide-title"></h2>
+                    <p class="section-body" id="guide-body"></p>
+                </div>
+
+                <div class="guide-grid">
+                    <article class="glass-card">
+                        <h3 class="system-title" id="guide-about-title"></h3>
+                        <p class="system-body" id="guide-about-body"></p>
+                    </article>
+
+                    <article class="glass-card">
+                        <h3 class="system-title" id="guide-steps-title"></h3>
+                        <div class="stack-list" id="guide-steps-list"></div>
+                    </article>
+
+                    <article class="glass-card">
+                        <h3 class="system-title" id="guide-rules-title"></h3>
+                        <div class="stack-list" id="guide-rules-list"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section id="tutorials" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="tutorials-kicker"></p>
+                    <h2 class="section-title" id="tutorials-title"></h2>
+                    <p class="section-body" id="tutorials-body"></p>
+                </div>
+
+                <div class="tutorial-grid" id="tutorial-grid"></div>
+            </section>
+
+            <section id="piano-guide" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="piano-guide-kicker"></p>
+                    <h2 class="section-title" id="piano-guide-title"></h2>
+                    <p class="section-body" id="piano-guide-subtitle"></p>
+                </div>
+
+                <div class="piano-guide-shell glass-card">
+                    <div class="piano-guide-meta">
+                        <span class="interface-badge" id="piano-guide-updated"></span>
+                    </div>
+                    <p class="system-body piano-guide-intro" id="piano-guide-intro"></p>
+                    <div class="piano-guide-grid" id="piano-guide-grid"></div>
+                </div>
+            </section>
+
+            <section id="access" class="section reveal">
+                <div class="section-head">
+                    <p class="section-kicker" id="access-kicker"></p>
+                    <h2 class="section-title" id="access-title"></h2>
+                    <p class="section-body" id="access-body"></p>
+                </div>
+
+                <div class="access-grid">
+                    <article class="glass-card access-card">
+                        <div class="access-head">
+                            <h3 class="system-title" id="script-title"></h3>
+                            <span class="interface-badge" id="script-badge"></span>
+                        </div>
+                        <p class="system-body" id="script-body"></p>
+                        <pre class="snippet-box" id="script-code"></pre>
+                    </article>
+
+                    <article class="glass-card access-card">
+                        <div class="access-head">
+                            <h3 class="system-title" id="key-title"></h3>
+                            <span class="interface-badge" id="key-badge"></span>
+                        </div>
+                        <p class="system-body" id="key-body"></p>
+                        <div class="stack-list" id="key-list"></div>
+                        <pre class="snippet-box" id="key-code"></pre>
+                    </article>
                 </div>
             </section>
 
@@ -172,6 +261,7 @@
     </div>
 
     <script src="content.js"></script>
+    <script src="piano-guide-content.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

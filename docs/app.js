@@ -4,6 +4,8 @@
     const localeKeys = Object.keys(data.locales);
     const fallbackLocale = data.locales.en;
     const fallbackConverter = data.locales.en.converter;
+    const SECTION_ORDER = ["portal", "overview", "guide", "tutorials", "pianoGuide", "access", "systems", "interface", "languages"];
+    const GLOBAL_HIDDEN_SECTIONS = new Set(["portal", "guide"]);
     const KEY_MAPPING = {
         60: "Key1C",
         61: "Key1Csharp",
@@ -33,6 +35,15 @@
     };
 
     const elements = {
+        portalSection: document.getElementById("portal"),
+        overviewSection: document.getElementById("overview"),
+        guideSection: document.getElementById("guide"),
+        tutorialsSection: document.getElementById("tutorials"),
+        pianoGuideSection: document.getElementById("piano-guide"),
+        accessSection: document.getElementById("access"),
+        systemsSection: document.getElementById("systems"),
+        interfaceSection: document.getElementById("interface"),
+        languagesSection: document.getElementById("languages"),
         brandVersion: document.getElementById("brand-version"),
         localeLabel: document.getElementById("locale-label"),
         localeSelect: document.getElementById("locale-select"),
@@ -120,6 +131,7 @@
     let currentLocaleKey = "en";
     let currentLocale = data.locales.en;
     let converterResult = null;
+    let currentTabKey = null;
 
     function normalizeLocale(input) {
         const raw = String(input || "").toLowerCase();
@@ -131,11 +143,14 @@
     }
 
     function getInitialLocale() {
-        const stored = normalizeLocale(window.localStorage.getItem("holon-hub-locale"));
-        if (stored !== "en" || window.localStorage.getItem("holon-hub-locale")) {
-            return stored;
+        const preferred = Array.isArray(navigator.languages) ? navigator.languages : [navigator.language || "en"];
+        for (const entry of preferred) {
+            const normalized = normalizeLocale(entry);
+            if (data.locales[normalized]) {
+                return normalized;
+            }
         }
-        return normalizeLocale(navigator.language || "en");
+        return "en";
     }
 
     function clearNode(node) {
@@ -524,6 +539,7 @@
 
     function renderLocaleCards(activeKey, locale) {
         clearNode(elements.localeGrid);
+        const currentLabel = locale.languages.currentLabel || "Current";
 
         localeKeys.forEach((key) => {
             const entry = data.locales[key];
@@ -557,7 +573,7 @@
 
             const action = document.createElement("div");
             action.className = "locale-action";
-            action.textContent = locale.languages.switchLabel;
+            action.textContent = key === activeKey ? currentLabel : locale.languages.switchLabel;
 
             button.append(head, tabs, action);
             elements.localeGrid.appendChild(button);
@@ -570,6 +586,63 @@
             const key = link.getAttribute("data-nav");
             link.textContent = nav[key];
         });
+    }
+
+    function getSectionMap() {
+        return {
+            portal: elements.portalSection,
+            overview: elements.overviewSection,
+            guide: elements.guideSection,
+            tutorials: elements.tutorialsSection,
+            pianoGuide: elements.pianoGuideSection,
+            access: elements.accessSection,
+            systems: elements.systemsSection,
+            interface: elements.interfaceSection,
+            languages: elements.languagesSection
+        };
+    }
+
+    function getVisibleSectionKeys(locale) {
+        const hidden = new Set(locale.hiddenSections || []);
+        return SECTION_ORDER.filter((key) => !hidden.has(key) && !GLOBAL_HIDDEN_SECTIONS.has(key));
+    }
+
+    function setActiveTab(nextKey) {
+        const visibleKeys = getVisibleSectionKeys(currentLocale);
+        const fallbackKey = visibleKeys[0] || null;
+        const activeKey = visibleKeys.includes(nextKey) ? nextKey : fallbackKey;
+        const sections = getSectionMap();
+
+        currentTabKey = activeKey;
+
+        Object.entries(sections).forEach(([key, section]) => {
+            if (!section) {
+                return;
+            }
+            const isHiddenByLocale = !visibleKeys.includes(key);
+            const isActive = key === activeKey;
+            section.hidden = isHiddenByLocale || !isActive;
+            section.classList.toggle("is-active-panel", isActive && !isHiddenByLocale);
+            if (isActive && !isHiddenByLocale) {
+                section.classList.add("is-visible");
+            }
+        });
+
+        document.querySelectorAll("[data-nav]").forEach((button) => {
+            const key = button.getAttribute("data-nav");
+            const isVisible = visibleKeys.includes(key);
+            const isActive = key === activeKey;
+            button.hidden = !isVisible;
+            button.setAttribute("aria-selected", String(isActive));
+            button.setAttribute("tabindex", isActive ? "0" : "-1");
+            button.classList.toggle("is-active", isActive);
+        });
+    }
+
+    function applySectionVisibility(locale) {
+        const visibleKeys = getVisibleSectionKeys(locale);
+        const nextKey = visibleKeys.includes(currentTabKey) ? currentTabKey : visibleKeys[0];
+        setActiveTab(nextKey);
     }
 
     function formatSeconds(value) {
@@ -612,7 +685,6 @@
         currentLocaleKey = key;
         currentLocale = locale;
 
-        window.localStorage.setItem("holon-hub-locale", key);
         document.documentElement.lang = locale.langTag;
         document.documentElement.dir = locale.dir;
         document.body.dataset.locale = key;
@@ -628,10 +700,13 @@
         elements.localeSelect.value = key;
 
         renderNavigation(locale);
+        applySectionVisibility(locale);
 
         elements.heroEyebrow.textContent = locale.hero.eyebrow;
         elements.heroSubtitle.textContent = locale.hero.subtitle;
         elements.heroLead.textContent = locale.hero.lead;
+        elements.heroSubtitle.hidden = !locale.hero.subtitle;
+        elements.heroLead.hidden = !locale.hero.lead;
 
         elements.ctaDiscord.href = data.meta.links.discord;
         elements.ctaTikTok.href = data.meta.links.tiktok;
@@ -992,6 +1067,12 @@
 
     populateLocaleSelect();
     setupReveal();
+
+    document.querySelectorAll("[data-nav]").forEach((button) => {
+        button.addEventListener("click", () => {
+            setActiveTab(button.getAttribute("data-nav"));
+        });
+    });
 
     elements.localeSelect.addEventListener("change", (event) => {
         setLocale(event.target.value);

@@ -24,17 +24,16 @@
                 </span>
             </a>
 
-            <nav class="main-nav" aria-label="Primary">
-                <a href="#portal" data-nav="portal"></a>
-                <a href="#overview" data-nav="overview"></a>
-                <a href="#guide" data-nav="guide"></a>
-                <a href="#tutorials" data-nav="tutorials"></a>
-                <a href="#piano-guide" data-nav="pianoGuide"></a>
-                <a href="#access" data-nav="access"></a>
-                <a href="#systems" data-nav="systems"></a>
-                <a href="#interface" data-nav="interface"></a>
-                <a href="#converter" data-nav="converter"></a>
-                <a href="#languages" data-nav="languages"></a>
+            <nav class="main-nav" aria-label="Primary" role="tablist">
+                <button type="button" role="tab" aria-controls="portal" data-nav="portal"></button>
+                <button type="button" role="tab" aria-controls="overview" data-nav="overview"></button>
+                <button type="button" role="tab" aria-controls="guide" data-nav="guide"></button>
+                <button type="button" role="tab" aria-controls="tutorials" data-nav="tutorials"></button>
+                <button type="button" role="tab" aria-controls="piano-guide" data-nav="pianoGuide"></button>
+                <button type="button" role="tab" aria-controls="access" data-nav="access"></button>
+                <button type="button" role="tab" aria-controls="systems" data-nav="systems"></button>
+                <button type="button" role="tab" aria-controls="interface" data-nav="interface"></button>
+                <button type="button" role="tab" aria-controls="languages" data-nav="languages"></button>
             </nav>
 
             <label class="locale-control" for="locale-select">
@@ -73,11 +72,11 @@
                 </aside>
             </section>
 
-            <section id="portal" class="section reveal">
+            <section id="portal" class="section reveal" role="tabpanel">
                 <div class="portal-grid" id="portal-grid"></div>
             </section>
 
-            <section id="overview" class="section reveal">
+            <section id="overview" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="overview-kicker"></p>
                     <h2 class="section-title" id="overview-title"></h2>
@@ -94,7 +93,7 @@
                 </div>
             </section>
 
-            <section id="guide" class="section reveal">
+            <section id="guide" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="guide-kicker"></p>
                     <h2 class="section-title" id="guide-title"></h2>
@@ -119,7 +118,7 @@
                 </div>
             </section>
 
-            <section id="tutorials" class="section reveal">
+            <section id="tutorials" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="tutorials-kicker"></p>
                     <h2 class="section-title" id="tutorials-title"></h2>
@@ -129,7 +128,7 @@
                 <div class="tutorial-grid" id="tutorial-grid"></div>
             </section>
 
-            <section id="piano-guide" class="section reveal">
+            <section id="piano-guide" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="piano-guide-kicker"></p>
                     <h2 class="section-title" id="piano-guide-title"></h2>
@@ -143,9 +142,52 @@
                     <p class="system-body piano-guide-intro" id="piano-guide-intro"></p>
                     <div class="piano-guide-grid" id="piano-guide-grid"></div>
                 </div>
+                <div id="converter" class="subsection converter-embed">
+                    <div class="section-head">
+                    <p class="section-kicker" id="converter-kicker"></p>
+                    <h2 class="section-title" id="converter-title"></h2>
+                    <p class="section-body" id="converter-body"></p>
+                    </div>
+
+                    <div class="converter-layout">
+                        <article class="glass-card converter-card">
+                            <div class="converter-form-grid">
+                                <label class="field">
+                                    <span class="field-label" id="converter-file-label"></span>
+                                    <input id="midi-file" type="file" accept=".mid,.midi,audio/midi,audio/x-midi">
+                                </label>
+
+                                <label class="field">
+                                    <span class="field-label" id="converter-interval-label"></span>
+                                    <input id="min-interval" type="number" min="0" max="5" step="0.01" value="0.05">
+                                </label>
+
+                                <label class="field">
+                                    <span class="field-label" id="converter-mode-label"></span>
+                                    <select id="chord-mode">
+                                        <option value="highest">highest</option>
+                                        <option value="lowest">lowest</option>
+                                    </select>
+                                </label>
+                            </div>
+
+                            <div class="cta-row converter-actions">
+                                <button class="button button-primary" id="convert-midi" type="button"></button>
+                                <button class="button button-secondary" id="download-json" type="button" disabled></button>
+                            </div>
+
+                            <p class="converter-hint" id="converter-hint"></p>
+                        </article>
+
+                        <aside class="glass-card converter-card">
+                            <dl class="snapshot-list" id="converter-stats"></dl>
+                            <pre class="converter-output" id="converter-output"></pre>
+                        </aside>
+                    </div>
+                </div>
             </section>
 
-            <section id="access" class="section reveal">
+            <section id="access" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="access-kicker"></p>
                     <h2 class="section-title" id="access-title"></h2>
@@ -174,7 +216,7 @@
                 </div>
             </section>
 
-            <section id="systems" class="section reveal">
+            <section id="systems" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="systems-kicker"></p>
                     <h2 class="section-title" id="systems-title"></h2>
@@ -184,7 +226,7 @@
                 <div class="systems-grid" id="systems-grid"></div>
             </section>
 
-            <section id="interface" class="section reveal">
+            <section id="interface" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="interface-kicker"></p>
                     <h2 class="section-title" id="interface-title"></h2>
@@ -200,51 +242,7 @@
                 </div>
             </section>
 
-            <section id="converter" class="section reveal">
-                <div class="section-head">
-                    <p class="section-kicker" id="converter-kicker"></p>
-                    <h2 class="section-title" id="converter-title"></h2>
-                    <p class="section-body" id="converter-body"></p>
-                </div>
-
-                <div class="converter-layout">
-                    <article class="glass-card converter-card">
-                        <div class="converter-form-grid">
-                            <label class="field">
-                                <span class="field-label" id="converter-file-label"></span>
-                                <input id="midi-file" type="file" accept=".mid,.midi,audio/midi,audio/x-midi">
-                            </label>
-
-                            <label class="field">
-                                <span class="field-label" id="converter-interval-label"></span>
-                                <input id="min-interval" type="number" min="0" max="5" step="0.01" value="0.05">
-                            </label>
-
-                            <label class="field">
-                                <span class="field-label" id="converter-mode-label"></span>
-                                <select id="chord-mode">
-                                    <option value="highest">highest</option>
-                                    <option value="lowest">lowest</option>
-                                </select>
-                            </label>
-                        </div>
-
-                        <div class="cta-row converter-actions">
-                            <button class="button button-primary" id="convert-midi" type="button"></button>
-                            <button class="button button-secondary" id="download-json" type="button" disabled></button>
-                        </div>
-
-                        <p class="converter-hint" id="converter-hint"></p>
-                    </article>
-
-                    <aside class="glass-card converter-card">
-                        <dl class="snapshot-list" id="converter-stats"></dl>
-                        <pre class="converter-output" id="converter-output"></pre>
-                    </aside>
-                </div>
-            </section>
-
-            <section id="languages" class="section reveal">
+            <section id="languages" class="section reveal" role="tabpanel">
                 <div class="section-head">
                     <p class="section-kicker" id="languages-kicker"></p>
                     <h2 class="section-title" id="languages-title"></h2>

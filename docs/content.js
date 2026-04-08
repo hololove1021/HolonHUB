@@ -29,27 +29,27 @@ window.HOLON_SITE_DATA = {
         systemDefinitions: [
             {
                 key: "chat",
-                tags: ["Global / Server / Private", "DiscordWebhookURL", "Notifications"]
+                tags: ["Multi Mode", "Alerts", "History"]
             },
             {
                 key: "grab",
-                tags: ["Super Throw", "Noclip Grab", "Line Extender"]
+                tags: ["Target Tools", "Range", "Effects"]
             },
             {
                 key: "piano",
-                tags: ["MusicKeyboard", "FTAP_Notes", "JSON autoplay"]
+                tags: ["Music", "Notes", "Playback"]
             },
             {
                 key: "keyboard",
-                tags: ["Teleport Z", "Anchor K", "Minimap"]
+                tags: ["Movement", "Shortcuts", "Map"]
             },
             {
                 key: "actions",
-                tags: ["Bring All", "Loop Kill", "Blobman"]
+                tags: ["Actions", "Targeting", "Control"]
             },
             {
                 key: "settings",
-                tags: ["Save / Load", "UI Colors", "orion.lua"]
+                tags: ["Profiles", "Appearance", "Preferences"]
             }
         ]
     },
@@ -118,27 +118,27 @@ window.HOLON_SITE_DATA = {
             modules: {
                 chat: {
                     title: "Chat Network",
-                    text: "Global, server-only, and private chat with Discord-backed history, notifications, and ticker support."
+                    text: "Communication features with multiple viewing modes, alerts, and activity display."
                 },
                 grab: {
                     title: "Grab Systems",
-                    text: "Includes super throw, spin grab, noclip grab, invisible grab, line extender, and animated line effects."
+                    text: "Target-focused tools with range, motion, and visual effect options."
                 },
                 piano: {
                     title: "Piano Toolkit",
-                    text: "Detects MusicKeyboard, follows players, loads JSON note files, and supports autoplay plus manual play."
+                    text: "Music-related tools for note handling, playback support, and guided use."
                 },
                 keyboard: {
                     title: "Keyboard Tools",
-                    text: "Teleport, anchor, silent aim, and a configurable minimap live in the keyboard-focused toolset."
+                    text: "Shortcut-based utility controls for movement, view support, and quick actions."
                 },
                 actions: {
                     title: "Action Suite",
-                    text: "Target actions cover bring flows, loop kill tools, blobman actions, and mass-fire routines."
+                    text: "General-purpose action tools for target handling and repeated operations."
                 },
                 settings: {
                     title: "Settings & UI",
-                    text: "Stores presets, colors, UI transparency, background IDs, and runtime configuration states."
+                    text: "Profile, appearance, and preference controls for the interface."
                 }
             },
             interface: {
@@ -389,27 +389,27 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             modules: {
                 chat: {
                     title: "チャット連携",
-                    text: "全体、サーバー内、個人チャットに対応し、Discord ベースの履歴、通知、ティッカー表示を持っています。"
+                    text: "複数の表示モード、通知、履歴表示に対応した連絡系機能です。"
                 },
                 grab: {
                     title: "掴みシステム",
-                    text: "スーパースロー、スピン、Noclip Grab、透明化、Line Extender、各種ライン演出が含まれます。"
+                    text: "対象操作まわりの補助、範囲調整、演出系設定をまとめています。"
                 },
                 piano: {
                     title: "ピアノ機能",
-                    text: "MusicKeyboard を検出し、プレイヤー追従、JSON ノート読込、自動演奏と手動演奏に対応します。"
+                    text: "ノート管理、再生補助、ガイド用途を含む音楽系機能です。"
                 },
                 keyboard: {
                     title: "キーボード支援",
-                    text: "テレポート、固定、サイレントエイム、設定可能なミニマップがキーボード系ツールとしてまとまっています。"
+                    text: "移動、補助表示、ショートカット操作を中心にした支援機能です。"
                 },
                 actions: {
                     title: "アクション群",
-                    text: "Bring、Loop Kill、Blobman 系アクション、全体炎上処理などの対象操作をまとめています。"
+                    text: "対象操作や連続実行を含む汎用アクション機能をまとめています。"
                 },
                 settings: {
                     title: "設定と UI",
-                    text: "プリセット保存、色、透明度、背景 ID、実行時設定の保存と復元を扱います。"
+                    text: "見た目や各種設定を調整するための管理機能です。"
                 }
             },
             interface: {

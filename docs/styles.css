@@ -309,6 +309,43 @@ select {
     backdrop-filter: blur(18px);
 }
 
+.portal-grid,
+.guide-grid,
+.access-grid,
+.piano-guide-grid,
+.tutorial-grid {
+    display: grid;
+    gap: 18px;
+}
+
+.portal-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.portal-card {
+    display: grid;
+    gap: 10px;
+    padding: 22px;
+}
+
+.portal-label {
+    color: var(--accent);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.portal-title {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+.portal-body {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
 .hero-panel {
     display: flex;
     flex-direction: column;
@@ -400,6 +437,158 @@ select {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
     gap: 18px;
+}
+
+.guide-grid {
+    grid-template-columns: 1.05fr 1fr 1fr;
+}
+
+.tutorial-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tutorial-card {
+    display: grid;
+    gap: 12px;
+    padding: 22px;
+}
+
+.tutorial-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tutorial-title {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.tutorial-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.tutorial-link:hover,
+.tutorial-link:focus-visible {
+    text-decoration: underline;
+}
+
+.tutorial-status {
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.piano-guide-shell {
+    display: grid;
+    gap: 18px;
+}
+
+.piano-guide-meta {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.piano-guide-intro {
+    margin: 0;
+}
+
+.piano-guide-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.piano-guide-card {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.piano-guide-card p {
+    margin: 0;
+    color: var(--muted);
+}
+
+.piano-guide-card ul,
+.piano-guide-card ol {
+    margin: 0;
+    padding-inline-start: 18px;
+    color: var(--muted);
+}
+
+.piano-guide-card li + li {
+    margin-top: 8px;
+}
+
+.piano-guide-note {
+    border-color: rgba(113, 227, 255, 0.22);
+    background: rgba(113, 227, 255, 0.05);
+}
+
+.piano-guide-image {
+    width: 100%;
+    display: block;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.piano-guide-caption {
+    font-size: 0.9rem;
+}
+
+.access-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+}
+
+.access-card,
+.detail-card {
+    align-content: start;
+}
+
+.access-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.stack-list {
+    display: grid;
+    gap: 10px;
+}
+
+.stack-item {
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--muted);
+}
+
+.stack-item-multiline {
+    white-space: pre-line;
+}
+
+.snippet-box {
+    min-height: 132px;
+    margin: 0;
+    padding: 16px;
+    border-radius: 16px;
+    background: rgba(4, 10, 17, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: #dff8ff;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.9rem;
+    line-height: 1.55;
 }
 
 .converter-layout {
@@ -647,7 +836,12 @@ select {
 
 @media (max-width: 1040px) {
     .hero,
+    .portal-grid,
     .overview-layout,
+    .guide-grid,
+    .tutorial-grid,
+    .piano-guide-grid,
+    .access-grid,
     .converter-layout,
     .systems-grid,
     .locale-grid {
@@ -688,6 +882,9 @@ select {
 
     .stats-grid,
     .converter-form-grid,
+    .portal-grid,
+    .tutorial-grid,
+    .piano-guide-grid,
     .tab-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -709,6 +906,9 @@ select {
     .cta-row,
     .stats-grid,
     .converter-form-grid,
+    .portal-grid,
+    .tutorial-grid,
+    .piano-guide-grid,
     .tab-grid {
         grid-template-columns: 1fr;
     }

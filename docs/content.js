@@ -60,12 +60,11 @@ window.HOLON_SITE_DATA = {
             label: "English",
             nativeName: "English",
             sourceFile: "hub-en.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Main", "Mode Settings", "Player", "Defense", "Grab", "Aura", "Chat", "Piano", "Keyboard", "Actions", "Sub Features", "Decoy"],
             localeLabel: "Language",
             nav: {
-                portal: "Portal",
                 overview: "Overview",
-                guide: "Guide",
                 tutorials: "Tutorials",
                 pianoGuide: "Piano Guide",
                 access: "Access",
@@ -76,8 +75,8 @@ window.HOLON_SITE_DATA = {
             },
             hero: {
                 eyebrow: "Prometheus / FTAP / Orion UI",
-                subtitle: "Source-based multilingual build overview",
-                lead: "A browsing-friendly website for Holon HUB v1.5.5, structured from the localized hub files and the shared Orion UI layer."
+                subtitle: "",
+                lead: ""
             },
             cta: {
                 discord: "Join Discord",
@@ -92,8 +91,8 @@ window.HOLON_SITE_DATA = {
             },
             snapshot: {
                 kicker: "Source Stack",
-                title: "Localized builds, shared foundation",
-                body: "Structured from the multilingual `hub-*.lua` files and the Orion UI layer in `orion.lua`.",
+                title: "Localized builds",
+                body: "Built from `hub-*.lua` and `orion.lua`.",
                 labels: {
                     source: "Source set",
                     locale: "Selected build",
@@ -101,9 +100,9 @@ window.HOLON_SITE_DATA = {
                 }
             },
             overview: {
-                kicker: "Source-Based Overview",
-                title: "A landing page rebuilt from the Lua builds",
-                body: "The Lua files describe a large Roblox hub with authentication, community links, combat and utility tabs, chat integration, piano automation, keyboard tools, decoy control, and saved UI presets. This page turns that structure into a clean website while keeping the real language builds visible."
+                kicker: "Overview",
+                title: "Official multilingual overview",
+                body: "Official Holon HUB overview built from the localized hub-*.lua files and orion.lua."
             },
             detailLabels: {
                 author: "Author",
@@ -113,8 +112,8 @@ window.HOLON_SITE_DATA = {
             },
             systems: {
                 kicker: "Core Systems",
-                title: "What the source files expose",
-                body: "The cards below summarize the modules revealed by the tab and section names inside the source."
+                title: "Main features",
+                body: "A short summary of the main systems shown in the source files."
             },
             modules: {
                 chat: {
@@ -143,15 +142,16 @@ window.HOLON_SITE_DATA = {
                 }
             },
             interface: {
-                kicker: "Locale Preview",
-                title: "Primary tab flow",
-                body: "The order below comes directly from the selected locale file.",
+                kicker: "Tab Preview",
+                title: "Primary tabs",
+                body: "Shown in the same order as the selected locale file.",
                 badge: "Selected source"
             },
             languages: {
                 kicker: "Supported Locales",
                 title: "10 language builds",
-                body: "Each card below maps to a real `hub-*.lua` variant. Pick one to switch the page copy and tab preview.",
+                body: "Each card matches a real `hub-*.lua` build.",
+                currentLabel: "Current language",
                 switchLabel: "Use this locale"
             },
             portal: {
@@ -199,8 +199,8 @@ window.HOLON_SITE_DATA = {
             },
             tutorials: {
                 kicker: "Official Tutorials",
-                title: "Video links and help guides",
-                body: "This section collects the official tutorial links so users can quickly find setup, authentication, piano, and feature guides.",
+                title: "Video guides",
+                body: "Official setup and feature videos.",
                 openLabel: "Open link",
                 pendingLabel: "In progress",
                 items: [
@@ -253,14 +253,14 @@ window.HOLON_SITE_DATA = {
             },
             access: {
                 kicker: "Access",
-                title: "Script and key information",
-                body: "This section is structured like an official distribution page: public script entry on the left, key guidance on the right.",
+                title: "Script and key",
+                body: "Official launch scripts and current key guidance.",
                 scriptTitle: "Language Scripts",
                 scriptBadge: "Official launch strings",
-                scriptBody: "Choose the language build you want to launch and use the matching official loader below.",
+                scriptBody: "Use the official loader for your language build.",
                 keyTitle: "Access Key",
                 keyBadge: "Important",
-                keyBody: "Below is the current key notice and the value users should paste into the key input field.",
+                keyBody: "Paste this value into the key input field.",
                 keyNotice: `🇯🇵 Script Access Key
 
 🚫 Prohibited (IMPORTANT)
@@ -302,8 +302,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             converter: {
                 kicker: "MIDI to JSON",
-                title: "Browser converter from the Python workflow",
-                body: "Upload a MIDI file and convert it into the same Holon HUB piano JSON shape used by the Python script: chord reduction plus minimum-interval filtering.",
+                title: "Browser converter",
+                body: "Convert MIDI into Holon HUB piano JSON in your browser.",
                 fileLabel: "MIDI file",
                 intervalLabel: "Minimum interval (seconds)",
                 modeLabel: "Chord mode",
@@ -323,7 +323,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
                 invalidMidi: "The selected file could not be parsed as a standard MIDI file.",
                 downloadName: "holon-midi.json"
             },
-            footer: "Holon HUB v1.5.5 overview organized from hub-*.lua and orion.lua."
+            footer: "Official Holon HUB v1.5.5 overview."
         },
         ja: {
             langTag: "ja",
@@ -331,12 +331,11 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Japanese",
             nativeName: "日本語",
             sourceFile: "hub-jp.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["メイン", "モード設定", "プレイヤー", "無敵", "掴む", "オーラ", "チャット", "ピアノ", "キーボード", "アクション", "サブ機能", "デコイ"],
             localeLabel: "言語",
             nav: {
-                portal: "案内",
                 overview: "概要",
-                guide: "使い方",
                 tutorials: "動画案内",
                 pianoGuide: "ピアノガイド",
                 access: "アクセス",
@@ -347,8 +346,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             hero: {
                 eyebrow: "Prometheus / FTAP / Orion UI",
-                subtitle: "ソースベースの多言語ビルド概要",
-                lead: "各 `hub-*.lua` と共有 UI 層の `orion.lua` をもとに、Holon HUB v1.5.5 の構成を見やすく整理したサイトです。"
+                subtitle: "",
+                lead: ""
             },
             cta: {
                 discord: "Discord に参加",
@@ -363,8 +362,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             snapshot: {
                 kicker: "ソース構成",
-                title: "多言語ビルドと共有基盤",
-                body: "`hub-*.lua` の多言語ファイル群と、`orion.lua` の UI レイヤーをもとに構成しています。",
+                title: "多言語ビルド",
+                body: "`hub-*.lua` と `orion.lua` をもとに構成しています。",
                 labels: {
                     source: "参照ファイル",
                     locale: "選択中ビルド",
@@ -372,9 +371,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
                 }
             },
             overview: {
-                kicker: "ソース由来の概要",
-                title: "Lua ビルドから再構成したランディング",
-                body: "Lua 側には認証、コミュニティ導線、戦闘系と補助系のタブ、チャット連携、ピアノ自動演奏、キーボード支援、デコイ制御、UI 設定保存が含まれています。このページではその構造を保ったまま、Web で確認しやすい形にまとめています。"
+                kicker: "概要",
+                title: "公式マルチ言語概要",
+                body: "hub-*.lua と orion.lua をもとにした Holon HUB の公式概要サイトです。"
             },
             detailLabels: {
                 author: "作者",
@@ -384,8 +383,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             systems: {
                 kicker: "主要システム",
-                title: "ソースから見える機能構成",
-                body: "下のカードは、タブ名とセクション名から読み取れるモジュールを要約したものです。"
+                title: "主要機能",
+                body: "ソースから読み取れる主要機能を短く整理しています。"
             },
             modules: {
                 chat: {
@@ -415,14 +414,15 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             interface: {
                 kicker: "ロケール表示",
-                title: "主要タブの流れ",
-                body: "下の並びは、選択中ロケールの Lua ファイルに合わせています。",
+                title: "主要タブ",
+                body: "選択中ロケールの Lua ファイル順で表示しています。",
                 badge: "選択中ソース"
             },
             languages: {
                 kicker: "対応ロケール",
                 title: "10 言語ビルド",
-                body: "各カードは実在する `hub-*.lua` ビルドに対応しています。選ぶとサイト文言とタブ表示が切り替わります。",
+                body: "各カードは実在する `hub-*.lua` ビルドに対応しています。",
+                currentLabel: "現在の言語",
                 switchLabel: "この言語に切替"
             },
             portal: {
@@ -470,8 +470,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             tutorials: {
                 kicker: "公式チュートリアル",
-                title: "動画リンクと案内まとめ",
-                body: "認証、起動、ピアノ、各機能の使い方動画をまとめて見られるようにした一覧です。",
+                title: "動画ガイド",
+                body: "公式のセットアップ動画と機能案内です。",
                 openLabel: "リンクを開く",
                 pendingLabel: "作成中",
                 items: [
@@ -524,14 +524,14 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             access: {
                 kicker: "アクセス",
-                title: "スクリプトとキー案内",
-                body: "ここを公式配布ページの中心として見せると、ユーザーが迷いにくくなります。",
+                title: "スクリプトとキー",
+                body: "公式スクリプトと現在のキー案内です。",
                 scriptTitle: "言語別スクリプト",
                 scriptBadge: "公式起動文字列",
-                scriptBody: "起動したい言語を選んで、下の公式スクリプトを使用してください。",
+                scriptBody: "使いたい言語の公式スクリプトを利用してください。",
                 keyTitle: "アクセスキー",
                 keyBadge: "重要",
-                keyBody: "下に現在のキー案内と、キー入力欄へ貼り付ける値を掲載しています。",
+                keyBody: "下の値をキー入力欄へ貼り付けてください。",
                 keyNotice: `🇯🇵 スクリプトアクセスキー
 
 🚫 禁止事項（重要）
@@ -571,8 +571,8 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             },
             converter: {
                 kicker: "MIDI → JSON",
-                title: "Python 版の流れをブラウザで実行",
-                body: "MIDI ファイルをアップロードすると、Python スクリプトと同じ Holon HUB ピアノ用 JSON 形式へ変換します。和音の整理と最小間隔フィルタにも対応しています。",
+                title: "ブラウザ変換",
+                body: "MIDI を Holon HUB ピアノ用 JSON に変換します。",
                 fileLabel: "MIDI ファイル",
                 intervalLabel: "最小間隔（秒）",
                 modeLabel: "和音モード",
@@ -592,7 +592,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
                 invalidMidi: "選択したファイルは標準 MIDI として解析できませんでした。",
                 downloadName: "holon-midi.json"
             },
-            footer: "Holon HUB v1.5.5 を `hub-*.lua` と `orion.lua` から整理した概要サイト。"
+            footer: "Holon HUB v1.5.5 の公式概要サイト。"
         },
         ar: {
             langTag: "ar",
@@ -600,6 +600,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Arabic",
             nativeName: "العربية",
             sourceFile: "hub-ar.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["الرئيسية", "إعدادات الوضع", "اللاعب", "حماية", "الإمساك", "الهالة", "الدردشة", "البيانو", "لوحة المفاتيح", "الإجراءات", "وظائف فرعية", "الطعم"],
             localeLabel: "اللغة",
             nav: {
@@ -696,6 +697,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Bengali",
             nativeName: "বাংলা",
             sourceFile: "hub-bn.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["মূল", "মোড সেটিংস", "প্লেয়ার", "প্রতিরক্ষা", "গ্র্যাব", "অরা", "চ্যাট", "পিয়ানো", "কীবোর্ড", "অ্যাকশন", "সাব ফিচার", "ডিকয়"],
             localeLabel: "ভাষা",
             nav: {
@@ -792,6 +794,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "German",
             nativeName: "Deutsch",
             sourceFile: "hub-de.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Start", "Modi", "Spieler", "Schutz", "Greifen", "Auren", "Chat", "Klavier", "Tastatur", "Aktionen", "Extras", "Köder"],
             localeLabel: "Sprache",
             nav: {
@@ -888,6 +891,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Spanish",
             nativeName: "Español",
             sourceFile: "hub-es.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Principal", "Modos", "Jugador", "Defensa", "Agarre", "Aura", "Chat", "Piano", "Teclado", "Acciones", "Funciones extra", "Senuelo"],
             localeLabel: "Idioma",
             nav: {
@@ -984,6 +988,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "French",
             nativeName: "Français",
             sourceFile: "hub-fr.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Principal", "Modes", "Joueur", "Defense", "Saisie", "Aura", "Chat", "Piano", "Clavier", "Actions", "Fonctions secondaires", "Leurre"],
             localeLabel: "Langue",
             nav: {
@@ -1080,6 +1085,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Korean",
             nativeName: "한국어",
             sourceFile: "hub-ko.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["메인", "모드 설정", "플레이어", "방어", "잡기", "오라", "채팅", "피아노", "키보드", "액션", "보조 기능", "디코이"],
             localeLabel: "언어",
             nav: {
@@ -1176,6 +1182,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Russian",
             nativeName: "Русский",
             sourceFile: "hub-ru.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Главная", "Настройки режима", "Игрок", "Защита", "Захват", "Аура", "Чат", "Пианино", "Клавиатура", "Действия", "Дополнительно", "Приманка"],
             localeLabel: "Язык",
             nav: {
@@ -1272,6 +1279,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/hololove1021/HolonHUB
             label: "Turkish",
             nativeName: "Türkçe",
             sourceFile: "hub-tr.lua",
+            hiddenSections: ["portal", "guide"],
             tabs: ["Ana", "Mod ayarlari", "Oyuncu", "Savunma", "Tutma", "Aura", "Sohbet", "Piyano", "Klavye", "Aksiyon", "Ek ozellikler", "Yem"],
             localeLabel: "Dil",
             nav: {

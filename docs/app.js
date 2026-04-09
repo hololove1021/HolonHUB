@@ -369,28 +369,44 @@
         card.appendChild(title);
     }
 
-    function renderPianoGuide() {
+    function getPianoGuideCopy(localeKey) {
+        if (!pianoGuideData) {
+            return null;
+        }
+
+        if (pianoGuideData.locales) {
+            return pianoGuideData.locales[localeKey]
+                || pianoGuideData.locales.en
+                || pianoGuideData.locales.ja
+                || null;
+        }
+
+        return pianoGuideData;
+    }
+
+    function renderPianoGuide(localeKey) {
+        const guideCopy = getPianoGuideCopy(localeKey);
         clearNode(elements.pianoGuideGrid);
 
         elements.pianoGuideKicker.textContent = "Piano Guide";
-        elements.pianoGuideTitle.textContent = pianoGuideData && pianoGuideData.title
-            ? pianoGuideData.title
+        elements.pianoGuideTitle.textContent = guideCopy && guideCopy.title
+            ? guideCopy.title
             : "Piano Guide";
-        elements.pianoGuideSubtitle.textContent = pianoGuideData && pianoGuideData.subtitle
-            ? pianoGuideData.subtitle
+        elements.pianoGuideSubtitle.textContent = guideCopy && guideCopy.subtitle
+            ? guideCopy.subtitle
             : "You can write your own detailed instructions and add images here.";
-        elements.pianoGuideUpdated.textContent = pianoGuideData && pianoGuideData.updatedAt
-            ? `Updated: ${pianoGuideData.updatedAt}`
+        elements.pianoGuideUpdated.textContent = guideCopy && guideCopy.updatedAt
+            ? `${guideCopy.updatedLabel || "Updated"}: ${guideCopy.updatedAt}`
             : "Editable section";
-        elements.pianoGuideIntro.textContent = pianoGuideData && pianoGuideData.intro
-            ? pianoGuideData.intro
+        elements.pianoGuideIntro.textContent = guideCopy && guideCopy.intro
+            ? guideCopy.intro
             : "";
 
-        if (!pianoGuideData || !Array.isArray(pianoGuideData.blocks)) {
+        if (!guideCopy || !Array.isArray(guideCopy.blocks)) {
             return;
         }
 
-        pianoGuideData.blocks.forEach((block) => {
+        guideCopy.blocks.forEach((block) => {
             if (!block || !block.type) {
                 return;
             }
@@ -437,7 +453,7 @@
                 const image = document.createElement("img");
                 image.className = "piano-guide-image";
                 image.src = block.src;
-                image.alt = block.alt || block.title || "Guide image";
+                image.alt = block.alt || block.title || guideCopy.imageAltFallback || "Guide image";
                 card.appendChild(image);
 
                 if (block.caption) {
@@ -744,7 +760,7 @@
         renderOverview(locale);
         renderGuide(locale);
         renderTutorials(locale);
-        renderPianoGuide();
+        renderPianoGuide(key);
         renderAccess(locale);
         renderSystems(locale);
         renderTabs(locale);

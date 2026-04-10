@@ -1433,6 +1433,7 @@ function OrionLib:MakeWindow(WindowConfig)
 				DropdownConfig.IconSize = DropdownConfig.IconSize or 20
 				DropdownConfig.IconProvider = DropdownConfig.IconProvider or function() return nil end
 				DropdownConfig.SelectedIconProvider = DropdownConfig.SelectedIconProvider or DropdownConfig.IconProvider
+				DropdownConfig.RefreshProvider = DropdownConfig.RefreshProvider or nil
 
 				local Dropdown = {Value = DropdownConfig.Default, Options = DropdownConfig.Options, Buttons = {}, Toggled = false, Type = "Dropdown", Save = DropdownConfig.Save}
 				local MaxElements = DropdownConfig.MaxVisibleOptions
@@ -1563,6 +1564,44 @@ function OrionLib:MakeWindow(WindowConfig)
 					end
 				end	
 
+				local function ApplySelectionVisuals()
+					if not table.find(Dropdown.Options, Dropdown.Value) then
+						Dropdown.Value = "..."
+						DropdownFrame.F.Selected.Text = Dropdown.Value
+						UpdateSelectedIcon(nil)
+						for _, v in pairs(Dropdown.Buttons) do
+							TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
+							TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
+						end
+						return
+					end
+
+					DropdownFrame.F.Selected.Text = Dropdown.Value
+					UpdateSelectedIcon(Dropdown.Value)
+					for _, v in pairs(Dropdown.Buttons) do
+						TweenService:Create(v,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 1}):Play()
+						TweenService:Create(v.Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0.4}):Play()
+					end
+					if Dropdown.Buttons[Dropdown.Value] then
+						TweenService:Create(Dropdown.Buttons[Dropdown.Value],TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{BackgroundTransparency = 0}):Play()
+						TweenService:Create(Dropdown.Buttons[Dropdown.Value].Title,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{TextTransparency = 0}):Play()
+					end
+				end
+
+				local function RefreshFromProvider()
+					if not DropdownConfig.RefreshProvider then
+						return
+					end
+
+					local Ok, NewOptions = pcall(DropdownConfig.RefreshProvider)
+					if not Ok or type(NewOptions) ~= "table" then
+						return
+					end
+
+					Dropdown:Refresh(NewOptions, true)
+					ApplySelectionVisuals()
+				end
+
 				function Dropdown:Refresh(Options, Delete)
 					if Delete then
 						for _,v in pairs(Dropdown.Buttons) do
@@ -1601,6 +1640,9 @@ function OrionLib:MakeWindow(WindowConfig)
 				end
 
 				AddConnection(Click.MouseButton1Click, function()
+					if not Dropdown.Toggled then
+						RefreshFromProvider()
+					end
 					Dropdown.Toggled = not Dropdown.Toggled
 					DropdownFrame.F.Line.Visible = Dropdown.Toggled
 					TweenService:Create(DropdownFrame.F.Ico,TweenInfo.new(.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Rotation = Dropdown.Toggled and 180 or 0}):Play()
@@ -1613,6 +1655,7 @@ function OrionLib:MakeWindow(WindowConfig)
 
 				Dropdown:Refresh(Dropdown.Options, false)
 				Dropdown:Set(Dropdown.Value)
+				Dropdown.RefreshFromProvider = RefreshFromProvider
 				if DropdownConfig.Flag then				
 					OrionLib.Flags[DropdownConfig.Flag] = Dropdown
 				end
